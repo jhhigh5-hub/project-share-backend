@@ -1,0 +1,16 @@
+package com.example.sharebackend.response;
+
+import com.example.sharebackend.domain.Car;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
+
+@Setter
+@Getter
+@Builder
+public class CarResponse {
+    boolean success;
+    Car car;
+}
