@@ -7,6 +7,8 @@ import com.example.sharebackend.response.CarResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -14,15 +16,18 @@ public class CarController {
         final CarMapper carMapper;
 
     @GetMapping("/car")
-    public CarResponse CarInfoHandle(@RequestBody CarRequest carRequest) {
+    public CarResponse CarInfoHandle(@RequestParam int idx, @RequestParam String corporation,
+                                     @RequestParam String modelName, @RequestParam String carType,
+                                     @RequestParam LocalDate modelYear, @RequestParam int fewSeats,
+                                     @RequestParam String gearType) {
         Car car = new Car();
-        car.setIdx(carRequest.getIdx());
-        car.setCorporation(carRequest.getCorporation());
-        car.setModelName(carRequest.getModelName());
-        car.setCarType(carRequest.getCarType());
-        car.setModelYear(carRequest.getModelYear());
-        car.setFewSeats(carRequest.getFewSeats());
-        car.setGearType(carRequest.getGearType());
+        car.setIdx(idx);
+        car.setCorporation(corporation);
+        car.setModelName(modelName);
+        car.setCarType(carType);
+        car.setModelYear(modelYear);
+        car.setFewSeats(fewSeats);
+        car.setGearType(gearType);
         carMapper.insertCar(car);
 
         return CarResponse.builder().success(true).car(car).build();
