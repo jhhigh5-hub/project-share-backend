@@ -3,11 +3,12 @@ package com.example.sharebackend.controller;
 import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.mapper.CarMapper;
 import com.example.sharebackend.request.CarRequest;
+import com.example.sharebackend.response.CarListResponse;
 import com.example.sharebackend.response.CarResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -15,21 +16,22 @@ import java.time.LocalDate;
 public class CarController {
         final CarMapper carMapper;
 
-    @GetMapping("/car")
-    public CarResponse CarInfoHandle(@RequestParam int idx, @RequestParam String corporation,
-                                     @RequestParam String modelName, @RequestParam String carType,
-                                     @RequestParam LocalDate modelYear, @RequestParam int fewSeats,
-                                     @RequestParam String gearType) {
+    @PostMapping("/car")
+    public CarResponse addCar(@RequestBody CarRequest carRequest) {
         Car car = new Car();
-        car.setIdx(idx);
-        car.setCorporation(corporation);
-        car.setModelName(modelName);
-        car.setCarType(carType);
-        car.setModelYear(modelYear);
-        car.setFewSeats(fewSeats);
-        car.setGearType(gearType);
+        car.setCorporation(carRequest.getCorporation());
+        car.setModelName(carRequest.getModelName());
+        car.setCarType(carRequest.getCarType());
+        car.setModelYear(carRequest.getModelYear());
+        car.setFewSeats(carRequest.getFewSeats());
+        car.setGearType(carRequest.getGearType());
         carMapper.insertCar(car);
-
         return CarResponse.builder().success(true).car(car).build();
+    }
+
+    @GetMapping("/car")
+    public CarListResponse CarInfoHandle() {
+        List<Car> carList = carMapper.findAllCars();
+        return  CarListResponse.builder().success(true).carList(carList).build();
     }
 }

@@ -44,7 +44,7 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
             }
 
             int subject = Integer.parseInt(jwt.getSubject());   // auth할 때 인증했던 계정의 id를 설정해서 보내뒀음.
-            request.setAttribute("logonId", subject);
+            request.setAttribute("currentAccountId", subject);
             filterChain.doFilter(request, response);
         }
 

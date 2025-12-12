@@ -11,7 +11,7 @@ public class Car {
     String corporation;
     String modelName;
     String carType;
-    LocalDate modelYear;
+    int modelYear;
     int fewSeats;
     String gearType;
 }

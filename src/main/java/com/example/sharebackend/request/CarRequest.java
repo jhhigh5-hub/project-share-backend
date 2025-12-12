@@ -9,11 +9,10 @@ import java.time.LocalDate;
 @Setter
 @Getter
 public class CarRequest {
-    int idx;
     String corporation;
     String modelName;
     String carType;
-    LocalDate modelYear;
+    int modelYear;
     int fewSeats;
     String gearType;
 }

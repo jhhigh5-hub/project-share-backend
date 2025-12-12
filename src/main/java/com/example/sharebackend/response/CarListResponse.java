@@ -4,12 +4,15 @@ import com.example.sharebackend.domain.Car;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
 
 @Setter
 @Getter
 @Builder
-public class CarResponse {
+public class CarListResponse {
     boolean success;
-    Car car;
+    List<Car> carList;
+    int countAllCar;
 }
