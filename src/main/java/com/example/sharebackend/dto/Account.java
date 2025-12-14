@@ -9,7 +9,7 @@ public class Account {
     String id;
     String nickname;
     String pw;
-    boolean active;
+
 
 
 }

@@ -6,8 +6,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class VerificationRequest {
+public class VerifyRequest {
     String accountId;
-    @Pattern(regexp = "(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{6}")
+    @Pattern(regexp = "(?=.*[a-z])(?=.*\\d).{6}")
     String code;
 }

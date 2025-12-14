@@ -5,8 +5,18 @@
 <mapper namespace="com.example.sharebackend.mapper.AccountMapper">
     <!-- 회원 가입 -->
     <insert id="insertOne" parameterType="Account" useGeneratedKeys="true" keyProperty="id">
-        insert into (id, nickname, pw) values (#{id}, #{nickname}, #{pw})
+        insert into account (id, nickname, pw) values (#{id}, #{nickname}, #{pw})
     </insert>
+
+    <!-- 해당 아이디 모든 정보 조회 -->
+    <select id="selectAll" parameterType="string" resultType="Account">
+        select * from account where id=#{id}
+    </select>
+
+    <!-- 이메일 인증 성공 시 업데이트 -->
+    <update id="activeUpdate" parameterType="Account">
+        update account set active=true where id=#{id}
+    </update>
 
 
 

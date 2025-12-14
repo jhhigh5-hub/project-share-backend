@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class Verification {
-    int accountId;
+public class Verify {
+    String accountId;
     String code;
 }

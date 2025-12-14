@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class AccountSignupRequest {
+public class AccountRequest {
     @NotNull
     @NotBlank
     @Email
@@ -15,14 +15,15 @@ public class AccountSignupRequest {
 
     @NotNull
     @NotBlank
-    @Size(min=3, max=10)
+    @Size(min = 3, max = 10)
     String nickname;
 
     @NotNull
     @NotBlank
     @Pattern(regexp = "(?=.*[!@#$%^&*()<>?{}])(?=.*[a-z])(?=.*\\d).{8,20}")
     String pw;
-    boolean active;
+
+
 
     public Account toAccount(String pw) {
         Account account = new Account();
