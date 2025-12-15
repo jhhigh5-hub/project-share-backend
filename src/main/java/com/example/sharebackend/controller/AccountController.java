@@ -38,9 +38,9 @@ public class AccountController {
                                          BindingResult result, HttpSession session) {
 
         if (result.hasErrors()) {
-            System.out.println("id ?" + result.hasFieldErrors("id"));
-            System.out.println("nickname ?" + result.hasFieldErrors("nickname"));
-            System.out.println("pw ?" + result.hasFieldErrors("pw"));
+            System.out.println("id? " + result.hasFieldErrors("id"));
+            System.out.println("nickname? " + result.hasFieldErrors("nickname"));
+            System.out.println("pw? " + result.hasFieldErrors("pw"));
 
             return AccountResponse.builder().success(false).build();
         }
