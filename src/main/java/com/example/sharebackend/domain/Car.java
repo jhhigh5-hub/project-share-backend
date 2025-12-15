@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.Year;
 
 @Setter @Getter
 public class Car {
@@ -11,7 +12,7 @@ public class Car {
     String corporation;
     String modelName;
     String carType;
-    int modelYear;
+    Year modelYear;
     int fewSeats;
     String gearType;
 }

@@ -20,7 +20,7 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
             String uri = request.getRequestURI();   // 요청 주소
             String method = request.getMethod();
 
-            if (uri.equals("/signup") || uri.equals("/login") || uri.equals("/verify-email") || uri.equals("/car")) {
+            if (uri.equals("/signup") || uri.equals("/login") || uri.equals("/verify-email")) {
                 return true;
             } else {
                 return false;
@@ -43,7 +43,7 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
                 return;
             }
 
-            int subject = Integer.parseInt(jwt.getSubject());   // auth할 때 인증했던 계정의 id를 설정해서 보내뒀음.
+            String subject = jwt.getSubject();   // auth할 때 인증했던 계정의 id를 설정해서 보내뒀음.
             request.setAttribute("currentAccountId", subject);
             filterChain.doFilter(request, response);
         }
