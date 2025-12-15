@@ -1,16 +1,20 @@
 package com.example.sharebackend.response;
 
-import com.example.sharebackend.domain.Account;
+import com.example.sharebackend.domain.Reservation;
 import lombok.*;
+
+import java.util.List;
 
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
+public class ReservationListResponse {
     boolean success;
     String message;
-    Account account;
-    String token;
+    int total;
+    List<Reservation> reservations;
+
+
 }

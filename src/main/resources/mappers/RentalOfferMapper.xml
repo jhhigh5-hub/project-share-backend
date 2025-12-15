@@ -27,4 +27,9 @@
 <!--        ORDER BY-->
 <!--        ro.idx DESC-->
 <!--    </select>-->
+   <!-- 해당 idx 차에 하루 렌트비 조회-->
+    <select id="selectByRentalPrice" resultType="int" parameterType="int">
+        select rental_price from rental_offer where idx=#{idx}
+    </select>
+
 </mapper>

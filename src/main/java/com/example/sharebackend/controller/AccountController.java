@@ -42,6 +42,9 @@ public class AccountController {
             System.out.println("nickname? " + result.hasFieldErrors("nickname"));
             System.out.println("pw? " + result.hasFieldErrors("pw"));
 
+            result.getFieldErrors().forEach(error ->
+                    System.out.println(error.getField() + " : " + error.getDefaultMessage()));
+
             return AccountResponse.builder().success(false).build();
         }
 
@@ -51,6 +54,8 @@ public class AccountController {
         if (result.hasErrors()) {
             System.out.println("accountId ?" + result.hasFieldErrors("accountId"));
             System.out.println("code ?" + result.hasFieldErrors("code"));
+            result.getFieldErrors().forEach(error ->
+                    System.out.println(error.getField() + " : " + error.getDefaultMessage()));
 
             return AccountResponse.builder().success(false).build();
         }

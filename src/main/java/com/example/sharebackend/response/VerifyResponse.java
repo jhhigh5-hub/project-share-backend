@@ -9,4 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class VerifyResponse {
     boolean success;
+    String message;
 }

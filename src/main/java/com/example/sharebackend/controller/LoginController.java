@@ -38,10 +38,11 @@ public class LoginController {
             cookie.setPath("/");
             cookie.setHttpOnly(true);
 
-            return  LoginResponse.builder().success(true).account(account).token(token).build();
+            return  LoginResponse.builder().success(true).message("로그인 성공").account(account).token(token).build();
 
         }
-        return LoginResponse.builder().success(false).account(null).token(null).build();
+        return LoginResponse.builder().success(false)
+                .message("로그인 실패했습니다. 아이디와 비밀번호를 확인하세요.").build();
 
     }
 
