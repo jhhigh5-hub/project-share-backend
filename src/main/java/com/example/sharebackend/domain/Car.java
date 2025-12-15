@@ -1,4 +1,4 @@
-package com.example.sharebackend.dto;
+package com.example.sharebackend.domain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,11 +7,11 @@ import java.time.LocalDate;
 
 @Setter @Getter
 public class Car {
-    int id;
+    int idx;
     String corporation;
     String modelName;
     String carType;
-    LocalDate modelYear;
+    int modelYear;
     int fewSeats;
     String gearType;
 }
