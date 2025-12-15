@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class CarResponse {
+public class CarAddResponse {
     boolean success;
     Car car;
 }

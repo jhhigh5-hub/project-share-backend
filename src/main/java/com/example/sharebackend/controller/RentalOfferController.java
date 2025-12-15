@@ -20,10 +20,10 @@ import java.util.UUID;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
+@Transactional
 public class RentalOfferController {
     final RentalOfferMapper rentalOfferMapper;
 
-    @Transactional
     @PostMapping("/rental-offer")
     public RentalOfferAddResponse addRentalOffer(@ModelAttribute RentalOfferAddRequest rentalOfferAddRequest,
                                                  @RequestAttribute String currentAccountId) throws IOException {
@@ -37,14 +37,17 @@ public class RentalOfferController {
         int rentalOfferInsertResult = rentalOfferMapper.insertRentalOffer(rentalOffer);
 
         if (rentalOfferInsertResult != 1) {
-            throw new IllegalStateException("렌탈 오퍼 DB 저장에 실패했습니다.");
+            return RentalOfferAddResponse.builder().success(false).message("렌탈 오퍼 DB 저장에 실패했습니다.").build();
         }
 
         int generatedRentalOfferIdx = rentalOffer.getIdx();
 
         List<MultipartFile> images = rentalOfferAddRequest.getImg();
         if (images == null || images.isEmpty()) {
-            throw new IllegalArgumentException("하나 이상의 이미지를 업로드해야 합니다.");
+            return RentalOfferAddResponse.builder().success(false).message("하나 이상의 이미지를 업로드해야 합니다.").build();
+        }
+        if (images.size() > 5) {
+            return RentalOfferAddResponse.builder().success(false).message("최대 5장의 이미지만 업로드할 수 있습니다.").build();
         }
 
         // 고정된 베이스 경로 설정
@@ -58,8 +61,9 @@ public class RentalOfferController {
         for (MultipartFile file : images) {
             if (!file.isEmpty()) {
                 if (file.getContentType() == null || !file.getContentType().startsWith("image")) {
-                    throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
+                    return RentalOfferAddResponse.builder().success(false).message("이미지 파일만 업로드 가능합니다.").build();
                 }
+
                 String originalFilename = file.getOriginalFilename();
                 String fileExtension = "";
                 if (originalFilename != null && originalFilename.contains(".")) {
@@ -74,8 +78,9 @@ public class RentalOfferController {
                 carImg.setImg(folderUuid + "/" + uniqueFileName);
 
                 int carImgInsertResult = rentalOfferMapper.insertCarImg(carImg);
+
                 if (carImgInsertResult != 1) {
-                    throw new IllegalStateException("차량 이미지 DB 저장에 실패했습니다.");
+                    return RentalOfferAddResponse.builder().success(false).message("차량 이미지 DB 저장에 실패했습니다.").build();
                 }
             }
         }
