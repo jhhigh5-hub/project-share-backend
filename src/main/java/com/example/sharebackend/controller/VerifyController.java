@@ -20,18 +20,17 @@ public class VerifyController {
 
     @PostMapping("verify-email")
     public VerifyResponse VerifyEmail(@Valid @RequestBody VerifyRequest vrt,
-                                      BindingResult result,
-                                      @SessionAttribute ("accountId") String accountId) {
+                                      BindingResult result) {
         VerifyResponse verifyResponse = new VerifyResponse();
         if(result.hasErrors()){
             System.out.println("code ? " + result.hasFieldErrors("code"));
             return verifyResponse;
         }
 
-        Verify verify = verifyMapper.selectByAccountId(accountId);
+        Verify verify = verifyMapper.selectByAccountId(vrt.getAccountId());
 
-        if(verify.getCode().equals(vrt.getCode()) && accountId.equals(verify.getAccountId())) {
-            int c = accountMapper.activeUpdate(accountId);
+        if(verify.getCode().equals(vrt.getCode()) && vrt.getAccountId().equals(verify.getAccountId())) {
+            int c = accountMapper.activeUpdate(verify.getAccountId());
             System.out.println("인증 성공 " + c);
 
             return VerifyResponse.builder().success(true).build();

@@ -83,7 +83,6 @@ public class AccountController {
                 "인증코드 : "+ code +"\n\n" + "감사합니다.");
         javaMailSender.send(mailMessage);
 
-        session.setAttribute("accountId", account.getId());
         return AccountResponse.builder().success(true).account(account).build();
     }
 
