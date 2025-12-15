@@ -1,6 +1,6 @@
 package com.example.sharebackend.response;
 
-import com.example.sharebackend.dto.Account;
+import com.example.sharebackend.domain.Account;
 import lombok.*;
 
 @Setter

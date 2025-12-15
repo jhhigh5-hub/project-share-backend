@@ -1,6 +1,6 @@
 package com.example.sharebackend.request;
 
-import com.example.sharebackend.dto.Account;
+import com.example.sharebackend.domain.Account;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;

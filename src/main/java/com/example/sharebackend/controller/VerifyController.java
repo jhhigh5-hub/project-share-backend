@@ -1,23 +1,14 @@
 package com.example.sharebackend.controller;
 
-import com.example.sharebackend.dto.Account;
-import com.example.sharebackend.dto.Verify;
+import com.example.sharebackend.domain.Verify;
 import com.example.sharebackend.mapper.AccountMapper;
 import com.example.sharebackend.mapper.VerifyMapper;
 import com.example.sharebackend.request.VerifyRequest;
 import com.example.sharebackend.response.VerifyResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

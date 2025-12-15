@@ -1,6 +1,6 @@
 package com.example.sharebackend.mapper;
 
-import com.example.sharebackend.dto.Account;
+import com.example.sharebackend.domain.Account;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

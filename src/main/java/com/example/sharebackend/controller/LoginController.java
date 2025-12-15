@@ -2,7 +2,7 @@ package com.example.sharebackend.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.sharebackend.dto.Account;
+import com.example.sharebackend.domain.Account;
 import com.example.sharebackend.mapper.AccountMapper;
 import com.example.sharebackend.request.LoginRequest;
 import com.example.sharebackend.response.LoginResponse;

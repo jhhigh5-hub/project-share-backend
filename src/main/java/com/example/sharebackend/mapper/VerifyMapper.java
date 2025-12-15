@@ -1,6 +1,6 @@
 package com.example.sharebackend.mapper;
 
-import com.example.sharebackend.dto.Verify;
+import com.example.sharebackend.domain.Verify;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

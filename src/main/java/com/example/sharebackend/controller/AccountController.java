@@ -1,13 +1,11 @@
 package com.example.sharebackend.controller;
 
 
-import com.example.sharebackend.dto.Account;
+import com.example.sharebackend.domain.Account;
 import com.example.sharebackend.mapper.AccountMapper;
 import com.example.sharebackend.mapper.VerifyMapper;
 import com.example.sharebackend.request.AccountRequest;
-import com.example.sharebackend.request.VerifyRequest;
 import com.example.sharebackend.response.AccountResponse;
-import com.example.sharebackend.response.VerifyResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

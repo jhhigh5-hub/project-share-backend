@@ -1,4 +1,4 @@
-package com.example.sharebackend.dto;
+package com.example.sharebackend.domain;
 
 import lombok.Getter;
 import lombok.Setter;
