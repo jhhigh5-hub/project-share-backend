@@ -85,6 +85,7 @@ public class RentalOfferController {
                 .success(true)
                 .message("렌탈 매물이 성공적으로 등록되었습니다.")
                 .registeredRentalOfferIdx(generatedRentalOfferIdx)
+                .rentalOffer(rentalOffer)
                 .build();
     }
 }
