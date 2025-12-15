@@ -80,12 +80,15 @@ public class RentalOfferController {
             }
         }
 
+        List<CarImg> carImages = rentalOfferMapper.findCarImgs(generatedRentalOfferIdx);
+
         // --- 성공 시 ---
         return RentalOfferAddResponse.builder()
                 .success(true)
                 .message("렌탈 매물이 성공적으로 등록되었습니다.")
                 .registeredRentalOfferIdx(generatedRentalOfferIdx)
                 .rentalOffer(rentalOffer)
+                .carImg(carImages)
                 .build();
     }
 }

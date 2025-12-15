@@ -11,6 +11,12 @@
         insert into car_img (rental_offer_idx, img)
         values (#{rentalOfferIdx}, #{img})
     </insert>
+    <select id="findCarImgs" parameterType="int" resultType="com.example.sharebackend.domain.CarImg">
+        SELECT idx, rental_offer_idx, img
+        FROM car_img
+        WHERE rental_offer_idx = #{rentalOfferIdx}
+        ORDER BY idx ASC
+    </select>
 
     <select id="findAvailableRentalOffers" resultType="com.example.sharebackend.domain.RentalOffer">
         SELECT
