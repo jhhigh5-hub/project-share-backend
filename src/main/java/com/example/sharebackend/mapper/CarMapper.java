@@ -9,4 +9,5 @@ import java.util.List;
 public interface CarMapper {
     int insertCar (Car car);
     List<Car> findAllCars();
+    int countAllCars();
 }

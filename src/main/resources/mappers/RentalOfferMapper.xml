@@ -12,10 +12,19 @@
         select rental_price from rental_offer where idx=#{idx}
     </select>
 
+    <select id="findAllRentalOffer" resultType="com.example.sharebackend.domain.RentalOffer">
+        select * from rental_offer
+    </select>
+
+    <select id="countAllRentalOffer" resultType="int">
+        select count(*) from rental_offer
+    </select>
+
     <insert id="insertCarImg" parameterType="com.example.sharebackend.domain.CarImg" useGeneratedKeys="true" keyProperty="idx">
         insert into car_img (rental_offer_idx, img)
         values (#{rentalOfferIdx}, #{img})
     </insert>
+
     <select id="findCarImgs" parameterType="int" resultType="com.example.sharebackend.domain.CarImg">
         SELECT idx, rental_offer_idx, img
         FROM car_img

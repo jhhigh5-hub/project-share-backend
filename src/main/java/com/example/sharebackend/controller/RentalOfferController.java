@@ -1,10 +1,13 @@
 package com.example.sharebackend.controller;
 
+import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.request.RentalOfferAddRequest;
+import com.example.sharebackend.response.CarListResponse;
 import com.example.sharebackend.response.RentalOfferAddResponse;
+import com.example.sharebackend.response.RentalOfferListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -95,5 +98,12 @@ public class RentalOfferController {
                 .rentalOffer(rentalOffer)
                 .carImg(carImages)
                 .build();
+    }
+
+    @GetMapping("/rental-offer")
+    public RentalOfferListResponse rentalOfferInfoHandle() {
+        List<RentalOffer> rentalOfferList = rentalOfferMapper.findAllRentalOffer();
+        int allRentalOffer = rentalOfferMapper.countAllRentalOffer();
+        return RentalOfferListResponse.builder().success(true).rentalOfferList(rentalOfferList).countAllRentalOffer(allRentalOffer).build();
     }
 }

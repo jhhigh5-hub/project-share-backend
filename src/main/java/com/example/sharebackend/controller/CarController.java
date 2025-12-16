@@ -30,8 +30,9 @@ public class CarController {
     }
 
     @GetMapping("/car")
-    public CarListResponse CarInfoHandle() {
+    public CarListResponse carInfoHandle() {
         List<Car> carList = carMapper.findAllCars();
-        return  CarListResponse.builder().success(true).carList(carList).build();
+        int allCars = carMapper.countAllCars();
+        return  CarListResponse.builder().success(true).carList(carList).countAllCar(allCars).build();
     }
 }

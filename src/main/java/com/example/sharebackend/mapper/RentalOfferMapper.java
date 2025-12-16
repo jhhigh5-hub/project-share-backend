@@ -23,6 +23,10 @@ public interface RentalOfferMapper {
 
     List<CarImg> findCarImgs(int rentalOfferIdx);
 
+    List<RentalOffer> findAllRentalOffer();
+
+    int countAllRentalOffer();
+
     // findAvailableRentalOffers 메서드 시그니처 수정!
     List<RentalOffer> findAvailableRentalOffers(@Param("desiredStartDate") LocalDate desiredStartDate,
                                                 @Param("desiredEndDate") LocalDate desiredEndDate
