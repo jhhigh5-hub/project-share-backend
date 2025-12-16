@@ -1,10 +1,10 @@
 package com.example.sharebackend.mapper;
 
 import com.example.sharebackend.domain.*;
+import com.example.sharebackend.request.RentalOfferAddReviewRequest;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.sharebackend.domain.RentalOffer;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
@@ -30,5 +30,5 @@ public interface RentalOfferMapper {
                                                 @Param("desiredEndDate") LocalDate desiredEndDate
     );
 
-    List<RentalOfferAddReview> selectRentalOfferAndReview(int rentalOfferIdx);
+    List<RentalOfferAddReviewRequest> selectRentalOfferAndReview(int rentalOfferIdx);
 }

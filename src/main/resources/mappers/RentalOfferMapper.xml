@@ -58,7 +58,7 @@
         ro.idx DESC
     </select>
 
-    <!-- 특정 매물 정보와 리뷰 -->
+    <!-- 특정 매물 정보 -->
     <select id="selectRentalOfferAndReview" resultType="RentalOfferAddReview">
         select rental_offer.*, car.* from rental_offer
         join car on rental_offer.car_idx = car.idx

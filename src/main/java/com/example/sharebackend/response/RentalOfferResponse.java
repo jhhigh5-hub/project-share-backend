@@ -1,8 +1,6 @@
 package com.example.sharebackend.response;
 
-import com.example.sharebackend.domain.Car;
-import com.example.sharebackend.domain.RentalOffer;
-import com.example.sharebackend.domain.RentalOfferAddReview;
+import com.example.sharebackend.request.RentalOfferAddReviewRequest;
 import lombok.*;
 
 import java.util.List;
@@ -15,6 +13,6 @@ import java.util.List;
 public class RentalOfferResponse {
     boolean success;
     String message;
-    List<RentalOfferAddReview> rentalOfferAddReview;
+    List<RentalOfferAddReviewRequest> rentalOfferAddReview;
 
 }
