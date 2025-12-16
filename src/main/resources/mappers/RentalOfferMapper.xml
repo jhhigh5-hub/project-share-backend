@@ -12,7 +12,8 @@
         values (#{accountId}, #{carIdx}, #{rentalPrice}, #{description})
     </insert>
 
-    <insert id="insertCarImg" parameterType="com.example.sharebackend.domain.CarImg" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insertCarImg" parameterType="com.example.sharebackend.domain.CarImg" useGeneratedKeys="true"
+            keyProperty="idx">
         insert into car_img (rental_offer_idx, img)
         values (#{rentalOfferIdx}, #{img})
     </insert>
@@ -115,16 +116,10 @@
         ro.idx DESC, ci.idx ASC
     </select>
 
-    <!-- ============================================== -->
-    <!-- 삭제되거나 주석 처리되어야 할 이전 쿼리들 (중복 또는 불필요) -->
-    <!-- ============================================== -->
-    <!-- 이전에 List<RentalOffer>를 반환하던 findAllRentalOffer는 이제 findAllRentalOffersWithImages가 대체 -->
-    <!-- <select id="findAllRentalOffer" resultType="com.example.sharebackend.domain.RentalOffer"> select * from rental_offer </select> -->
-
-    <!-- findAllCarImages 쿼리 (findAllRentalOffersWithImages 쿼리 안에서 이미지가 포함되므로 이제 불필요) -->
-    <!-- <select id="findAllCarImages" resultType="com.example.sharebackend.domain.CarImg"> SELECT idx, rental_offer_idx, img FROM car_img ORDER BY rental_offer_idx ASC, idx ASC </select> -->
-
-    <!-- 이전에 제안했던 findAvailableRentalOffersWithImages (이 쿼리는 findAvailableRentalOffers와 거의 동일하고, resultMap 이름으로만 달라 혼동될 수 있으므로, 하나만 남겨두고 재활용하는게 좋음) -->
-    <!-- 지금은 findAvailableRentalOffers를 수정해서 사용하도록 했으므로 이 쿼리는 삭제/주석 처리! -->
-
+    <!-- 특정 매물 정보와 리뷰 -->
+    <select id="selectRentalOfferAndReview" resultType="RentalOfferAddReview">
+        select rental_offer.*, car.* from rental_offer
+        join car on rental_offer.car_idx = car.idx
+        where rental_offer.idx = #{rentalOfferIdx};
+    </select>
 </mapper>
