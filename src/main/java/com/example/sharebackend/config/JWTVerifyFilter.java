@@ -32,7 +32,8 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
             String token = request.getHeader("Token");
 
             if (token == null) {
-                response.getWriter().println("{\"success\":false}");
+                response.getWriter().println("{\"success\":false, \"cause\":\"Token is null\"}");
+
                 return;
             }
             DecodedJWT jwt;

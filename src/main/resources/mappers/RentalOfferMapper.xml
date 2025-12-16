@@ -13,8 +13,11 @@
         select rental_price from rental_offer where idx=#{idx}
     </select>
 
+    <!-- 매물 전체 조회 수정 -->
     <select id="findAllRentalOffer" resultType="com.example.sharebackend.domain.RentalOffer">
-        select * from rental_offer
+        select account. nickname, rental_offer.car_idx, rental_offer.rental_price, rental_offer.description,
+        car.* from rental_offer join account on rental_offer.account_id = account.id
+        join car on rental_offer.car_idx = car.idx;
     </select>
 
     <select id="countAllRentalOffer" resultType="int">
@@ -57,11 +60,8 @@
 
     <!-- 특정 매물 정보와 리뷰 -->
     <select id="selectRentalOfferAndReview" resultType="RentalOfferAddReview">
-        select rental_offer.*, car.*, review.*
-        from rental_offer
+        select rental_offer.*, car.* from rental_offer
         join car on rental_offer.car_idx = car.idx
-        join reservation on rental_offer.idx = reservation.rental_offer_idx
-        join review on reservation.idx = review.reservation_idx
-        where rental_offer.idx=#{rentalOfferIdx}
+        where rental_offer.idx = #{rentalOfferIdx};
     </select>
 </mapper>
