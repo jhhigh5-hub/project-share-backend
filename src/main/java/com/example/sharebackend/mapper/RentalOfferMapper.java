@@ -1,10 +1,10 @@
 package com.example.sharebackend.mapper;
 
 import com.example.sharebackend.domain.*;
-import com.example.sharebackend.request.RentalOfferAddReviewRequest;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.sharebackend.domain.RentalOffer;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
@@ -26,9 +26,10 @@ public interface RentalOfferMapper {
     int countAllRentalOffer();
 
     // findAvailableRentalOffers 메서드 시그니처 수정!
-    List<RentalOffer> findAvailableRentalOffers(@Param("desiredStartDate") LocalDate desiredStartDate,
-                                                @Param("desiredEndDate") LocalDate desiredEndDate
+    List<RentalOfferResponse> findAvailableRentalOffers(@Param("desiredStartDate") LocalDate desiredStartDate,
+                                                        @Param("desiredEndDate") LocalDate desiredEndDate
     );
 
     List<RentalOfferAddReviewRequest> selectRentalOfferAndReview(int rentalOfferIdx);
+    List<RentalOfferResponse> findAllRentalOffersWithImages();
 }

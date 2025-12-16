@@ -3,26 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.sharebackend.mapper.RentalOfferMapper">
-    <insert id="insertRentalOffer" parameterType="com.example.sharebackend.domain.RentalOffer" useGeneratedKeys="true"
-            keyProperty="idx">
+
+    <!-- ============================================== -->
+    <!-- 1. 매물 등록 및 관련 쿼리 -->
+    <!-- ============================================== -->
+    <insert id="insertRentalOffer" parameterType="com.example.sharebackend.domain.RentalOffer" useGeneratedKeys="true" keyProperty="idx">
         insert into rental_offer (account_id, car_idx, rental_price, description)
         values (#{accountId}, #{carIdx}, #{rentalPrice}, #{description})
     </insert>
-
-    <select id="selectByRentalPrice" resultType="int" parameterType="int">
-        select rental_price from rental_offer where idx=#{idx}
-    </select>
-
-    <!-- 매물 전체 조회 수정 -->
-    <select id="findAllRentalOffer" resultType="com.example.sharebackend.domain.RentalOffer">
-        select account. nickname, rental_offer.car_idx, rental_offer.rental_price, rental_offer.description,
-        car.* from rental_offer join account on rental_offer.account_id = account.id
-        join car on rental_offer.car_idx = car.idx;
-    </select>
-
-    <select id="countAllRentalOffer" resultType="int">
-        select count(*) from rental_offer
-    </select>
 
     <insert id="insertCarImg" parameterType="com.example.sharebackend.domain.CarImg" useGeneratedKeys="true"
             keyProperty="idx">
@@ -30,6 +18,7 @@
         values (#{rentalOfferIdx}, #{img})
     </insert>
 
+    <!-- 특정 매물의 이미지 조회 (매물 등록 성공 응답, 상세 페이지 등에서 사용) -->
     <select id="findCarImgs" parameterType="int" resultType="com.example.sharebackend.domain.CarImg">
         SELECT idx, rental_offer_idx, img
         FROM car_img
@@ -37,25 +26,93 @@
         ORDER BY idx ASC
     </select>
 
-    <select id="findAvailableRentalOffers" resultType="com.example.sharebackend.domain.RentalOffer">
+    <!-- ============================================== -->
+    <!-- 2. 단일 매물 조회 / 카운트 쿼리 (필요 시) -->
+    <!-- ============================================== -->
+    <!-- 찌리 XML에 이미 있었던 쿼리 -->
+    <select id="selectByRentalPrice" resultType="int" parameterType="int">
+        select rental_price from rental_offer where idx=#{idx}
+    </select>
+
+    <!-- 전체 RentalOffer 개수 조회 (카운트용) -->
+    <select id="countAllRentalOffer" resultType="int">
+        select count(*) from rental_offer
+    </select>
+
+    <!-- ============================================== -->
+    <!-- 3. RentalOfferResponse DTO 매핑을 위한 resultMap 정의 (딱 한 번만! ❗️) -->
+    <!-- ============================================== -->
+    <resultMap id="rentalOfferResponseMap" type="com.example.sharebackend.response.RentalOfferResponse">
+        <!-- RentalOffer 기본 필드 매핑 -->
+        <id property="idx" column="ro_idx"/> <!-- rental_offer의 PK를 ro_idx로 별칭 -->
+        <result property="accountId" column="account_id"/>
+        <result property="carIdx" column="car_idx"/>
+        <result property="rentalPrice" column="rental_price"/>
+        <result property="description" column="description"/>
+        <!-- ... 기타 RentalOffer의 필드가 있다면 여기에 추가 ... -->
+
+        <!-- carImages 리스트 매핑 (collection 태그 사용) -->
+        <collection property="carImages" ofType="com.example.sharebackend.domain.CarImg">
+            <id property="idx" column="ci_idx"/> <!-- car_img의 PK를 ci_idx로 별칭 -->
+            <result property="rentalOfferIdx" column="ci_rental_offer_idx"/>
+            <result property="img" column="img_url"/> <!-- car_img의 img 컬럼을 img_url로 별칭 -->
+        </collection>
+    </resultMap>
+
+    <!-- ============================================== -->
+    <!-- 4. 목록 조회 쿼리들 (모두 위에 정의된 rentalOfferResponseMap 참조 💡) -->
+    <!-- ============================================== -->
+
+    <!-- 모든 매물과 그에 연결된 이미지 리스트를 조회하는 쿼리 (홈 화면) -->
+    <select id="findAllRentalOffersWithImages"
+            resultMap="rentalOfferResponseMap"> <!-- 위에 정의된 resultMap의 id만 참조! -->
         SELECT
-        ro.idx, ro.member_id AS memberId, ro.car_idx AS carIdx,
-        ro.rental_price AS rentalPrice, ro.description
+        ro.idx AS ro_idx,
+        ro.account_id,
+        ro.car_idx,
+        ro.rental_price,
+        ro.description,
+        ci.idx AS ci_idx,
+        ci.rental_offer_idx AS ci_rental_offer_idx,
+        ci.img AS img_url
         FROM
         rental_offer ro
+        LEFT JOIN
+        car_img ci ON ro.idx = ci.rental_offer_idx
+        ORDER BY
+        ro.idx DESC, ci.idx ASC
+    </select>
+
+    <!-- 특정 날짜에 사용 가능한 매물과 그에 연결된 이미지 리스트 조회 (날짜 필터링 화면) -->
+    <!-- resultMap을 사용해서 반환 타입을 RentalOfferResponse로 변경! -->
+    <select id="findAvailableRentalOffers"
+            resultMap="rentalOfferResponseMap"> <!-- 위에 정의된 resultMap의 id만 참조! -->
+        SELECT
+        ro.idx AS ro_idx,
+        ro.account_id, <!-- ro.member_id 대신 ro.account_id (이전 피드백에서 수정) -->
+        ro.car_idx,
+        ro.rental_price,
+        ro.description,
+        ci.idx AS ci_idx,
+        ci.rental_offer_idx AS ci_rental_offer_idx,
+        ci.img AS img_url
+        FROM
+        rental_offer ro
+        LEFT JOIN
+        car_img ci ON ro.idx = ci.rental_offer_idx
         WHERE
         NOT EXISTS (
         SELECT 1
         FROM reservation res
         WHERE
         res.rental_offer_idx = ro.idx
-        AND res.is_reserved = 1
+        AND res.reservation_status = TRUE <!-- is_reserved = 1 대신 reservation_status = TRUE (이전 피드백에서 수정) -->
         AND (
         (res.start_date &lt; #{desiredEndDate}) AND (res.end_date &gt; #{desiredStartDate})
         )
         )
         ORDER BY
-        ro.idx DESC
+        ro.idx DESC, ci.idx ASC
     </select>
 
     <!-- 특정 매물 정보 -->

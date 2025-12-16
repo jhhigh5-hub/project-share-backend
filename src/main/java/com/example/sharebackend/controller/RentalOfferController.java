@@ -8,6 +8,7 @@ import com.example.sharebackend.request.RentalOfferAddRequest;
 import com.example.sharebackend.response.RentalOfferAddResponse;
 import com.example.sharebackend.response.RentalOfferListResponse;
 import com.example.sharebackend.response.RentalOfferResponse;
+import com.example.sharebackend.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -102,9 +103,13 @@ public class RentalOfferController {
 
     @GetMapping("/rental-offer")
     public RentalOfferListResponse rentalOfferInfoHandle() {
-        List<RentalOffer> rentalOfferList = rentalOfferMapper.findAllRentalOffer();
-        int allRentalOffer = rentalOfferMapper.countAllRentalOffer();
-        return RentalOfferListResponse.builder().success(true).rentalOfferList(rentalOfferList).countAllRentalOffer(allRentalOffer).build();
+
+        List<RentalOfferResponse> rentalOffersWithImages = rentalOfferMapper.findAllRentalOffersWithImages();
+        int count = rentalOfferMapper.countAllRentalOffer();
+
+        return RentalOfferListResponse.builder()
+                .success(true).rentalOfferResponseList(rentalOffersWithImages)
+                .countAllRentalOffer(count).build();
     }
 
     @GetMapping("/rental-offer/{rentalOfferIdx}")
