@@ -3,11 +3,12 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.sharebackend.mapper.RentalOfferMapper">
-    <insert id="insertRentalOffer" parameterType="com.example.sharebackend.domain.RentalOffer" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insertRentalOffer" parameterType="com.example.sharebackend.domain.RentalOffer" useGeneratedKeys="true"
+            keyProperty="idx">
         insert into rental_offer (account_id, car_idx, rental_price, description)
         values (#{accountId}, #{carIdx}, #{rentalPrice}, #{description})
     </insert>
-  
+
     <select id="selectByRentalPrice" resultType="int" parameterType="int">
         select rental_price from rental_offer where idx=#{idx}
     </select>
@@ -20,7 +21,8 @@
         select count(*) from rental_offer
     </select>
 
-    <insert id="insertCarImg" parameterType="com.example.sharebackend.domain.CarImg" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insertCarImg" parameterType="com.example.sharebackend.domain.CarImg" useGeneratedKeys="true"
+            keyProperty="idx">
         insert into car_img (rental_offer_idx, img)
         values (#{rentalOfferIdx}, #{img})
     </insert>
@@ -51,5 +53,15 @@
         )
         ORDER BY
         ro.idx DESC
+    </select>
+
+    <!-- 특정 매물 정보와 리뷰 -->
+    <select id="selectRentalOfferAndReview" resultType="RentalOfferAddReview">
+        select rental_offer.*, car.*, review.*
+        from rental_offer
+        join car on rental_offer.car_idx = car.idx
+        join reservation on rental_offer.idx = reservation.rental_offer_idx
+        join review on reservation.idx = review.reservation_idx
+        where rental_offer.idx=#{rentalOfferIdx}
     </select>
 </mapper>

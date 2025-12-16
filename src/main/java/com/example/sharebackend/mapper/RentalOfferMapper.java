@@ -1,10 +1,8 @@
 package com.example.sharebackend.mapper;
 
-import com.example.sharebackend.domain.RentalOffer;
+import com.example.sharebackend.domain.*;
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.sharebackend.domain.Car;
-import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -31,4 +29,6 @@ public interface RentalOfferMapper {
     List<RentalOffer> findAvailableRentalOffers(@Param("desiredStartDate") LocalDate desiredStartDate,
                                                 @Param("desiredEndDate") LocalDate desiredEndDate
     );
+
+    List<RentalOfferAddReview> selectRentalOfferAndReview(int rentalOfferIdx);
 }
