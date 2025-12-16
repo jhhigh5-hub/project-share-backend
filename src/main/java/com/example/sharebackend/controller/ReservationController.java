@@ -1,19 +1,14 @@
 package com.example.sharebackend.controller;
 
-import com.example.sharebackend.domain.Account;
-import com.example.sharebackend.domain.Car;
-import com.example.sharebackend.domain.RentalOffer;
 import com.example.sharebackend.domain.Reservation;
-import com.example.sharebackend.mapper.AccountMapper;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.mapper.ReservationMapper;
 import com.example.sharebackend.request.ReservationRequest;
 import com.example.sharebackend.response.ReservationListResponse;
 import com.example.sharebackend.response.ReservationResponse;
+import com.example.sharebackend.response.ReviewResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -65,6 +60,7 @@ public class ReservationController {
 
         return ReservationResponse.builder().success(true).reservation(rvt).build();
     }
+
     // 시작날짜, 끝날짜, 하루 금액을 가져와서 for문 돌리면 if 처리
     public int calculateTotalPrice(
             LocalDate startDate,
@@ -87,15 +83,35 @@ public class ReservationController {
     }
 
     @GetMapping("/reservation")
-    public ReservationListResponse ReservationSelectHandle(@RequestParam ReservationRequest rtt) {
+    public ReservationListResponse ReservationSelectHandle(@RequestAttribute("currentAccountId") String accountId) {
 
-        List<Reservation> list = reservationMapper.selectListAll(rtt.getAccountId(), rtt.getIdx());
-        if(list.isEmpty()){
-            int total = reservationMapper.selectAllCount(rtt.getAccountId());
+        List<Reservation> list = reservationMapper.selectListAll(accountId);
+        if (!list.isEmpty()) {
+            int total = reservationMapper.selectAllCount(accountId);
             return ReservationListResponse.builder().success(true)
                     .message("조회성공").total(total).reservations(list).build();
         }
         return ReservationListResponse.builder().success(false).message("조회실패").build();
+    }
+
+    @DeleteMapping("/reservation/{idx}")
+    public ReservationResponse deleteReservationHandle(@PathVariable int idx, @RequestAttribute("currentAccountId") String accountId,
+                                                       Reservation reservation) {
+        System.out.println("idx : " + idx);
+        System.out.println("accountId : " + accountId);
+
+        int update = reservationMapper.ReservationStatusUpdate(idx, accountId);
+        if(update > 0) {
+            return ReservationResponse.builder().success(true).message("예약이 철회 되었습니다.").build();
+        }
+
+        return ReservationResponse.builder().success(false).message("예약철회 실패").build();
+    }
+
+    @PostMapping("/reservation/{reservationIdx}/review")
+    public ReviewResponse reviewResponse () {
+
+        return ReviewResponse.builder().build();
     }
 
 

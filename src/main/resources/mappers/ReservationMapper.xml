@@ -3,21 +3,54 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.sharebackend.mapper.ReservationMapper">
+
+    <resultMap id="ReservationResultMap" type="com.example.sharebackend.domain.Reservation">
+        <!-- Reservation 기본 컬럼 매핑 -->
+        <id property="accountId" column="account_id"/>
+        <result property="rentalOfferIdx" column="rental_offer_idx"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="reservationStatus" column="reservation_status"/>
+        <result property="paymentAmount" column="payment_amount"/>
+
+        <!-- RentalOffer 매핑 -->
+        <association property="rentalOffer" javaType="com.example.sharebackend.domain.RentalOffer">
+            <id property="idx" column="rental_offer_idx"/>
+            <result property="accountId" column="rental_offer_account_id"/>
+            <result property="carIdx" column="car_idx"/>
+            <result property="rentalPrice" column="rental_price"/>
+            <result property="description" column="description"/>
+
+            <!-- Car 매핑 -->
+            <association property="car" javaType="com.example.sharebackend.domain.Car">
+                <id property="idx" column="car_idx"/>
+                <result property="corporation" column="corporation"/>
+                <result property="modelName" column="model_name"/>
+                <result property="carType" column="car_type"/>
+                <result property="modelYear" column="model_year"/>
+                <result property="fewSeats" column="few_seats"/>
+                <result property="gearType" column="gear_type"/>
+            </association>
+        </association>
+    </resultMap>
+
     <!-- 예약하기 -->
     <insert id="insertOne" parameterType="Reservation">
         insert into reservation (account_id, rental_offer_idx, start_date, end_date, reservation_status, payment_amount)
-            values (#{accountId}, #{rentalOfferIdx}, #{startDate}, #{endDate}, true, #{paymentAmount})
+        values (#{accountId}, #{rentalOfferIdx}, #{startDate}, #{endDate}, true, #{paymentAmount})
     </insert>
     <!-- 해당 아이디 예약 기록 조회 -->
-    <select id="selectListAll" parameterType="string" resultType="Reservation">
+    <select id="selectListAll" parameterType="string" resultMap="ReservationResultMap">
         select * from reservation
-        join rental_offer on rental_offer.idx=#{} = reservation.rental_offer_idx
-        join car on rental_offer.car_idx = car.idx; order by idx=#{idx} desc;;
+            join rental_offer on rental_offer.idx = reservation.rental_offer_idx
+            join car on rental_offer.car_idx = car.idx
+            where reservation.account_id = #{accountId}
+            order by reservation.idx desc
     </select>
 
     <!-- 해당 아이디 예약 총 개수 -->
-    <select id="selectAllCount" parameterType="string" resultType="Reservation">
-        select count(*) from reservation where account_id=#{accountId};
+    <select id="selectAllCount" parameterType="string" resultType="int">
+        select count(*) from reservation where account_id=#{accountId}
     </select>
 
     <!-- 예약 중복 확인 -->
@@ -30,11 +63,9 @@
         and end_date &gt; #{startDate}
     </select>
 
-
-    <select id="selectById">
-        select * from reservation
-        join rental_offer on rental_offer.idx = reservation.rental_offer_idx
-        join car on rental_offer.car_idx = car.idx;
-    </select>
+    <!-- 예약 철회 -->
+    <delete id="ReservationStatusUpdate" parameterType="Reservation" >
+        update reservation set reservation_status=false where idx=#{idx} and account_id=#{accountId}
+    </delete>
 
 </mapper>
