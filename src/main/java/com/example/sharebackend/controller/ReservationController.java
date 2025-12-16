@@ -6,7 +6,6 @@ import com.example.sharebackend.mapper.ReservationMapper;
 import com.example.sharebackend.request.ReservationRequest;
 import com.example.sharebackend.response.ReservationListResponse;
 import com.example.sharebackend.response.ReservationResponse;
-import com.example.sharebackend.response.ReviewResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -101,18 +100,11 @@ public class ReservationController {
         System.out.println("accountId : " + accountId);
 
         int update = reservationMapper.ReservationStatusUpdate(idx, accountId);
-        if(update > 0) {
+        if (update > 0) {
             return ReservationResponse.builder().success(true).message("예약이 철회 되었습니다.").build();
         }
 
         return ReservationResponse.builder().success(false).message("예약철회 실패").build();
     }
-
-    @PostMapping("/reservation/{reservationIdx}/review")
-    public ReviewResponse reviewResponse () {
-
-        return ReviewResponse.builder().build();
-    }
-
 
 }
