@@ -7,6 +7,11 @@
         insert into rental_offer (account_id, car_idx, rental_price, description)
         values (#{accountId}, #{carIdx}, #{rentalPrice}, #{description})
     </insert>
+  
+    <select id="selectByRentalPrice" resultType="int" parameterType="int">
+        select rental_price from rental_offer where idx=#{idx}
+    </select>
+
     <insert id="insertCarImg" parameterType="com.example.sharebackend.domain.CarImg" useGeneratedKeys="true" keyProperty="idx">
         insert into car_img (rental_offer_idx, img)
         values (#{rentalOfferIdx}, #{img})

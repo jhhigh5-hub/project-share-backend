@@ -10,5 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 public class AccountResponse {
     boolean success;
+    String message;
     Account account;
 }

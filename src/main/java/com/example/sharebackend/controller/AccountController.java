@@ -42,6 +42,9 @@ public class AccountController {
             System.out.println("nickname? " + result.hasFieldErrors("nickname"));
             System.out.println("pw? " + result.hasFieldErrors("pw"));
 
+            result.getFieldErrors().forEach(error ->
+                    System.out.println(error.getField() + " : " + error.getDefaultMessage()));
+
             return AccountResponse.builder().success(false).build();
         }
 
@@ -51,6 +54,8 @@ public class AccountController {
         if (result.hasErrors()) {
             System.out.println("accountId ?" + result.hasFieldErrors("accountId"));
             System.out.println("code ?" + result.hasFieldErrors("code"));
+            result.getFieldErrors().forEach(error ->
+                    System.out.println(error.getField() + " : " + error.getDefaultMessage()));
 
             return AccountResponse.builder().success(false).build();
         }
@@ -72,20 +77,7 @@ public class AccountController {
         // 앞에 ""(빈문자열)을 넣어 주면 문자열 + 문자로 시작되어 뒤에 붙는 값이 전부 문자열로 변환
         String code = "" + lower + num + sb;
 
-        // 문자열을 문자로 만들어 랜덤을 섞기 위해서 한 작업
-        List<Character> list = code.chars() // code 문자열을 유니코드 정수(IntStream)로 바꿈
-                .mapToObj(c -> (char) c) // int c를 다시 char로 바꿈
-                .collect(Collectors.toList()); // 바꾼 char를 하나에 list에 모은다.
-
-        Collections.shuffle(list); // list에 있는 문자 요소들을 랜덤으로 섞는다.
-
-        // list를 문자열로 쓸 수 없으니 for문 돌면서 문자로 만들고 그걸
-        // StringBuilder로 붙이고 toString()로 문자열 만들어서 DB에 저장
-        StringBuilder finalCode = new StringBuilder();
-        for (char c : list) finalCode.append(c);
-        String cd = finalCode.toString();
-
-        int b = verifyMapper.insertCode(asr.getId(), cd);
+        int b = verifyMapper.insertCode(asr.getId(), code);
         System.out.println("코드 저장 :" + b);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -96,7 +88,6 @@ public class AccountController {
                 "인증코드 : "+ code +"\n\n" + "감사합니다.");
         javaMailSender.send(mailMessage);
 
-        session.setAttribute("accountId", account.getId());
         return AccountResponse.builder().success(true).account(account).build();
     }
 
