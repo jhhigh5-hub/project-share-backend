@@ -3,8 +3,13 @@ package com.example.sharebackend.controller;
 import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
+import com.example.sharebackend.domain.RentalOfferAddReview;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.request.RentalOfferAddRequest;
+import com.example.sharebackend.response.CarListResponse;
+import com.example.sharebackend.response.RentalOfferAddResponse;
+import com.example.sharebackend.response.RentalOfferListResponse;
+import com.example.sharebackend.response.RentalOfferResponse;
 import com.example.sharebackend.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,5 +112,15 @@ public class RentalOfferController {
         return RentalOfferListResponse.builder()
                 .success(true).rentalOfferResponseList(rentalOffersWithImages)
                 .countAllRentalOffer(count).build();
+    }
+
+    @GetMapping("/rental-offer/{rentalOfferIdx}")
+    public RentalOfferResponse rentalOfferReviewHandle(@PathVariable int rentalOfferIdx) {
+        List<RentalOfferAddReview> rentalOfferAddReviewslist = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
+        if(rentalOfferAddReviewslist == null){
+            return RentalOfferResponse.builder().success(false).message("존재하지 않는 매물입니다.").build();
+        }
+
+    return RentalOfferResponse.builder().success(true).rentalOfferAddReview(rentalOfferAddReviewslist).build();
     }
 }
