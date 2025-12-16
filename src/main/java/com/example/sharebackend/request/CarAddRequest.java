@@ -1,18 +1,17 @@
 package com.example.sharebackend.request;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.Year;
 
 @Setter
 @Getter
-public class CarRequest {
+public class CarAddRequest {
     String corporation;
     String modelName;
     String carType;
-    int modelYear;
+    Year modelYear;
     int fewSeats;
     String gearType;
 }

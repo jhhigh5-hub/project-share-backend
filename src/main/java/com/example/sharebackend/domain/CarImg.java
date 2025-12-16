@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class Account {
-    String id;
-    String nickname;
-    String pw;
+public class CarImg {
+    int idx;
+    int rentalOfferIdx;
+    String img;
 }

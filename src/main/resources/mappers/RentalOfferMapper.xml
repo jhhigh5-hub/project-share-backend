@@ -3,33 +3,44 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.sharebackend.mapper.RentalOfferMapper">
-    <insert id="addRentalOffer" parameterType="RentalOffer" useGeneratedKeys="true" keyProperty="idx">
+    <insert id="insertRentalOffer" parameterType="com.example.sharebackend.domain.RentalOffer" useGeneratedKeys="true" keyProperty="idx">
         insert into rental_offer (account_id, car_idx, rental_price, description)
         values (#{accountId}, #{carIdx}, #{rentalPrice}, #{description})
     </insert>
-<!--    <select id="findAvailableRentalOffers" resultType="com.example.sharebackend.response.">-->
-<!--        SELECT-->
-<!--        ro.idx, ro.member_id AS memberId, ro.car_idx AS carIdx,-->
-<!--        ro.rental_price AS rentalPrice, ro.description-->
-<!--        FROM-->
-<!--        rental_offer ro-->
-<!--        WHERE-->
-<!--        NOT EXISTS (-->
-<!--        SELECT 1-->
-<!--        FROM reservation res-->
-<!--        WHERE-->
-<!--        res.rental_offer_idx = ro.idx-->
-<!--        AND res.is_reserved = 1-->
-<!--        AND (-->
-<!--        (res.start_date &lt; #{desiredEndDate}) AND (res.end_date &gt; #{desiredStartDate})-->
-<!--        )-->
-<!--        )-->
-<!--        ORDER BY-->
-<!--        ro.idx DESC-->
-<!--    </select>-->
-   <!-- 해당 idx 차에 하루 렌트비 조회-->
+  
     <select id="selectByRentalPrice" resultType="int" parameterType="int">
         select rental_price from rental_offer where idx=#{idx}
     </select>
 
+    <insert id="insertCarImg" parameterType="com.example.sharebackend.domain.CarImg" useGeneratedKeys="true" keyProperty="idx">
+        insert into car_img (rental_offer_idx, img)
+        values (#{rentalOfferIdx}, #{img})
+    </insert>
+    <select id="findCarImgs" parameterType="int" resultType="com.example.sharebackend.domain.CarImg">
+        SELECT idx, rental_offer_idx, img
+        FROM car_img
+        WHERE rental_offer_idx = #{rentalOfferIdx}
+        ORDER BY idx ASC
+    </select>
+
+    <select id="findAvailableRentalOffers" resultType="com.example.sharebackend.domain.RentalOffer">
+        SELECT
+        ro.idx, ro.member_id AS memberId, ro.car_idx AS carIdx,
+        ro.rental_price AS rentalPrice, ro.description
+        FROM
+        rental_offer ro
+        WHERE
+        NOT EXISTS (
+        SELECT 1
+        FROM reservation res
+        WHERE
+        res.rental_offer_idx = ro.idx
+        AND res.is_reserved = 1
+        AND (
+        (res.start_date &lt; #{desiredEndDate}) AND (res.end_date &gt; #{desiredStartDate})
+        )
+        )
+        ORDER BY
+        ro.idx DESC
+    </select>
 </mapper>

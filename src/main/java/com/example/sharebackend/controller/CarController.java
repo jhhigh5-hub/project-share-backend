@@ -2,9 +2,9 @@ package com.example.sharebackend.controller;
 
 import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.mapper.CarMapper;
-import com.example.sharebackend.request.CarRequest;
+import com.example.sharebackend.request.CarAddRequest;
 import com.example.sharebackend.response.CarListResponse;
-import com.example.sharebackend.response.CarResponse;
+import com.example.sharebackend.response.CarAddResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,16 +17,16 @@ public class CarController {
         final CarMapper carMapper;
 
     @PostMapping("/car")
-    public CarResponse addCar(@RequestBody CarRequest carRequest) {
+    public CarAddResponse addCar(@RequestBody CarAddRequest carAddRequest) {
         Car car = new Car();
-        car.setCorporation(carRequest.getCorporation());
-        car.setModelName(carRequest.getModelName());
-        car.setCarType(carRequest.getCarType());
-        car.setModelYear(carRequest.getModelYear());
-        car.setFewSeats(carRequest.getFewSeats());
-        car.setGearType(carRequest.getGearType());
+        car.setCorporation(carAddRequest.getCorporation());
+        car.setModelName(carAddRequest.getModelName());
+        car.setCarType(carAddRequest.getCarType());
+        car.setModelYear(carAddRequest.getModelYear());
+        car.setFewSeats(carAddRequest.getFewSeats());
+        car.setGearType(carAddRequest.getGearType());
         carMapper.insertCar(car);
-        return CarResponse.builder().success(true).car(car).build();
+        return CarAddResponse.builder().success(true).car(car).build();
     }
 
     @GetMapping("/car")
