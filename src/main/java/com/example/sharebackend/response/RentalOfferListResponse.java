@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RentalOfferListResponse {
     boolean success;
-    List<RentalOffer> rentalOfferList;
+    String message;
+    List<RentalOfferResponse> rentalOfferResponseList;
     int countAllRentalOffer;
 }
