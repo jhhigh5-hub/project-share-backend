@@ -3,6 +3,8 @@ package com.example.sharebackend.config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.sharebackend.domain.Account;
+import com.example.sharebackend.mapper.AccountMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +16,12 @@ import java.io.IOException;
 
 @Component
 public class JWTVerifyFilter extends OncePerRequestFilter {
+
+    final AccountMapper accountMapper;
+
+    public JWTVerifyFilter(AccountMapper accountMapper) {
+        this.accountMapper = accountMapper;
+    }
 
         @Override
         protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -44,10 +52,9 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
             }
 
             String subject = jwt.getSubject();   // auth할 때 인증했던 계정의 id를 설정해서 보내뒀음.
-            request.setAttribute("currentAccountId", subject);
+            Account account = accountMapper.findById(subject);
+            request.setAttribute("currentAccountId", account.getId());
+            request.setAttribute("currentNickname", account.getNickname());
             filterChain.doFilter(request, response);
         }
-
-
-
     }

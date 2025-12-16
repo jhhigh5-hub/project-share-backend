@@ -16,5 +16,6 @@ public class RentalOfferAddResponse {
     String message;
     int registeredRentalOfferIdx;
     RentalOffer rentalOffer;
+    String nickname;
     List<CarImg> carImg;
 }

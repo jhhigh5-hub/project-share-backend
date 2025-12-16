@@ -27,7 +27,8 @@ public class RentalOfferController {
 
     @PostMapping("/rental-offer")
     public RentalOfferAddResponse addRentalOffer(@ModelAttribute RentalOfferAddRequest rentalOfferAddRequest,
-                                                 @RequestAttribute String currentAccountId) throws IOException {
+                                                 @RequestAttribute String currentAccountId,
+                                                 @RequestAttribute String currentNickName) throws IOException {
 
         RentalOffer rentalOffer = new RentalOffer();
         rentalOffer.setAccountId(currentAccountId);

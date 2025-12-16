@@ -13,6 +13,10 @@
         select * from account where id=#{id}
     </select>
 
+    <select id="findById" parameterType="String" resultType="com.example.sharebackend.domain.Account">
+        select id, nickname from account where id = #{id}
+    </select>
+
     <!-- 'id'가 존재하는지 카운트해서 boolean 값으로 반환 (0이면 false, 1 이상이면 true) -->
     <select id="existsById" parameterType="string" resultType="boolean">
         select count(*) > 0 from account where id = #{id}

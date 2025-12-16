@@ -71,6 +71,7 @@
         ro.car_idx,
         ro.rental_price,
         ro.description,
+        a.nickname,
         ci.idx AS ci_idx,
         ci.rental_offer_idx AS ci_rental_offer_idx,
         ci.img AS img_url

@@ -13,6 +13,7 @@ import java.util.List;
 public class RentalOfferResponse {
     int idx;
     String accountId;
+    String nickname;
     int carIdx;
     int rentalPrice;
     String description;
