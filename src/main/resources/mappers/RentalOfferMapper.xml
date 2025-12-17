@@ -52,7 +52,7 @@
         <!-- ... 기타 RentalOffer의 필드가 있다면 여기에 추가 ... -->
 
         <!-- carImages 리스트 매핑 (collection 태그 사용) -->
-        <collection property="carImages" ofType="com.example.sharebackend.domain.CarImg">
+        <collection property="carImages" javaType="com.example.sharebackend.domain.CarImg">
             <id property="idx" column="ci_idx"/> <!-- car_img의 PK를 ci_idx로 별칭 -->
             <result property="rentalOfferIdx" column="ci_rental_offer_idx"/>
             <result property="img" column="img_url"/> <!-- car_img의 img 컬럼을 img_url로 별칭 -->
@@ -64,23 +64,46 @@
     <!-- ============================================== -->
 
     <!-- 모든 매물과 그에 연결된 이미지 리스트를 조회하는 쿼리 (홈 화면) -->
-    <select id="findAllRentalOffersWithImages"
-            resultMap="rentalOfferResponseMap"> <!-- 위에 정의된 resultMap의 id만 참조! -->
-        SELECT
-        ro.idx AS ro_idx,
-        ro.account_id,
-        ro.car_idx,
-        ro.rental_price,
-        ro.description,
-        ci.idx AS ci_idx,
-        ci.rental_offer_idx AS ci_rental_offer_idx,
-        ci.img AS img_url
-        FROM
-        rental_offer ro
-        LEFT JOIN
-        car_img ci ON ro.idx = ci.rental_offer_idx
-        ORDER BY
-        ro.idx DESC, ci.idx ASC
+<!--    <select id="findAllRentalOffersWithImages"-->
+<!--            resultMap="rentalOfferResponseMap"> &lt;!&ndash; 위에 정의된 resultMap의 id만 참조! &ndash;&gt;-->
+<!--        SELECT-->
+<!--        ro.idx AS ro_idx,-->
+<!--        ro.account_id,-->
+<!--        ro.car_idx,-->
+<!--        ro.rental_price,-->
+<!--        ro.description,-->
+<!--        ci.idx AS ci_idx,-->
+<!--        ci.rental_offer_idx AS ci_rental_offer_idx,-->
+<!--        ci.img AS img_url-->
+<!--        FROM-->
+<!--        rental_offer ro-->
+<!--        LEFT JOIN-->
+<!--        car_img ci ON ro.idx = ci.rental_offer_idx-->
+<!--        ORDER BY-->
+<!--        ro.idx DESC, ci.idx ASC-->
+<!--    </select>-->
+
+    <!-- 매물 전체 조회 -->
+    <select id="findAllRentalOffersWithImages" resultType="RentalOfferAddReviewResponse">
+        select account. nickname , rental_offer.rental_price, rental_offer.description,
+        car.* from rental_offer
+        left join account on rental_offer.account_id = account. id
+        left join car on rental_offer.car_idx = car.idx
+    </select>
+    <!-- 매물 전체 이미지 -->
+    <select id="rentalOfferAllImages" resultType="CarImg">
+        select
+        rental_offer_idx,
+        img
+        from car_img
+        where rental_offer_idx in
+        <foreach collection="ids"
+                 item="id"
+                 open="("
+                 separator=","
+                 close=")">
+            #{id}
+        </foreach>
     </select>
 
     <!-- 특정 날짜에 사용 가능한 매물과 그에 연결된 이미지 리스트 조회 (날짜 필터링 화면) -->
@@ -116,8 +139,9 @@
     </select>
 
     <!-- 특정 매물 정보 -->
-    <select id="selectRentalOfferAndReview" resultType="RentalOfferAddReview">
-        select rental_offer.*, car.* from rental_offer
+    <select id="selectRentalOfferAndReview" resultType="RentalOfferAddReviewResponse">
+        select rental_offer.*, car.*
+        from rental_offer
         join car on rental_offer.car_idx = car.idx
         where rental_offer.idx = #{rentalOfferIdx};
     </select>

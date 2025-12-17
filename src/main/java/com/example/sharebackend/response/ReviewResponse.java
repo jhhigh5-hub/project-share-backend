@@ -1,6 +1,6 @@
 package com.example.sharebackend.response;
 
-import com.example.sharebackend.domain.CarImg;
+import com.example.sharebackend.domain.Review;
 import lombok.*;
 
 import java.util.List;
@@ -10,12 +10,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RentalOfferResponse {
+public class ReviewResponse {
     boolean success;
     String message;
-    List<RentalOfferAddReviewResponse> rentalOfferAddReview;
-    List<CarImg> rentalOfferCarImg;
-
-
-
+    Review review;
+    List<Review> reviewList;
 }

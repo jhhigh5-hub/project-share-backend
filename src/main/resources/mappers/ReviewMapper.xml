@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sharebackend.mapper.ReviewMapper">
+    <!-- 리뷰 작성 -->
+    <insert id="insertOne" parameterType="Review">
+        insert into review (reservation_idx, content, star_rating)
+                values (#{reservationIdx}, #{content}, #{starRating})
+    </insert>
+
+    <!-- reservationIdx에 해당하는 모든 리뷰 조회  -->
+    <select id="selectByReservationIdx" resultType="Review">
+        select * from review where reservation_idx=#{reservationIdx}
+    </select>
+</mapper>

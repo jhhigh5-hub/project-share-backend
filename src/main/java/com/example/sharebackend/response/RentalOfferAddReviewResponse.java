@@ -1,4 +1,4 @@
-package com.example.sharebackend.request;
+package com.example.sharebackend.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,8 +7,9 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
-public class RentalOfferAddReviewRequest {
+public class RentalOfferAddReviewResponse {
     // rental_offer
+    int idx;
     String accountId;
     int rentalPrice;
     String description;
@@ -20,9 +21,4 @@ public class RentalOfferAddReviewRequest {
     LocalDate modelYear;
     int fewSeats;
     String gearType;
-
-
-
-
-
 }
