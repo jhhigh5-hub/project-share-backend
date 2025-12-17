@@ -32,7 +32,7 @@ public interface RentalOfferMapper {
     );
 
     // 특정 매물 정보 조회
-    List<RentalOfferAddReviewResponse> selectRentalOfferAndReview(int rentalOfferIdx);
+    RentalOfferAddReviewResponse selectRentalOfferAndReview(int rentalOfferIdx);
 
     // 매물 전체 조회
     List<RentalOfferAddReviewResponse> findAllRentalOffersWithImages();

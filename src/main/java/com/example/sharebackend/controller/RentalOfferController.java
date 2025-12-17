@@ -173,7 +173,7 @@ public class RentalOfferController {
 
     @GetMapping("/rental-offer/{rentalOfferIdx}")
     public RentalOfferResponse rentalOfferReviewHandle(@PathVariable int rentalOfferIdx) {
-        List<RentalOfferAddReviewResponse> rentalOfferAddReviewslist = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
+        RentalOfferAddReviewResponse rentalOfferAddReviewslist = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
         List<CarImg> cImg = rentalOfferMapper.findCarImgs(rentalOfferIdx);
         List<RentalOfferReviewResponse> reviewList = reviewMapper.selectByRentalOfferIdx(rentalOfferIdx);
         if(rentalOfferAddReviewslist == null){
