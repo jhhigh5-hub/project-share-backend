@@ -1,12 +1,14 @@
 package com.example.sharebackend.controller;
 
+import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
 import com.example.sharebackend.response.RentalOfferAddReviewResponse;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.request.RentalOfferAddRequest;
 import com.example.sharebackend.response.RentalOfferAddResponse;
-
+import com.example.sharebackend.response.RentalOfferListResponse;
+import com.example.sharebackend.response.RentalOfferResponse;
 import com.example.sharebackend.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +19,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin
@@ -156,6 +159,4 @@ public class RentalOfferController {
 
     return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg).rentalOfferAddReview(rentalOfferAddReviewslist).build();
     }
-
-
 }

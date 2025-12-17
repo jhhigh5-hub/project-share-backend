@@ -14,7 +14,7 @@ import java.util.List;
 @CrossOrigin
 @RequiredArgsConstructor
 public class CarController {
-        final CarMapper carMapper;
+    final CarMapper carMapper;
 
     @PostMapping("/car")
     public CarAddResponse addCar(@RequestBody CarAddRequest carAddRequest) {
@@ -30,9 +30,10 @@ public class CarController {
     }
 
     @GetMapping("/car")
-    public CarListResponse carInfoHandle() {
-        List<Car> carList = carMapper.findAllCars();
-        int allCars = carMapper.countAllCars();
-        return  CarListResponse.builder().success(true).carList(carList).countAllCar(allCars).build();
+    public CarListResponse carInfoHandle(@RequestParam(defaultValue = "") String query) {
+
+        List<Car> carList = carMapper.findAllCars(query);
+        int allCars = carMapper.countAllCars(query);
+        return CarListResponse.builder().success(true).carList(carList).total(allCars).build();
     }
 }
