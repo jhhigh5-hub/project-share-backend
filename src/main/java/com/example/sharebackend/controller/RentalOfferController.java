@@ -40,6 +40,7 @@ public class RentalOfferController {
 
         RentalOffer rentalOffer = new RentalOffer();
         rentalOffer.setAccountId(currentAccountId);
+        rentalOffer.setNickName(currentNickName);
         rentalOffer.setCarIdx(rentalOfferAddRequest.getCarIdx());
         rentalOffer.setRentalPrice(rentalOfferAddRequest.getRentalPrice());
         rentalOffer.setDescription(rentalOfferAddRequest.getDescription());
