@@ -1,6 +1,7 @@
 package com.example.sharebackend.mapper;
 
 import com.example.sharebackend.domain.RentalOffer;
+import com.example.sharebackend.domain.RentalOfferAddReview;
 import com.example.sharebackend.response.RentalOfferResponse;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -33,4 +34,5 @@ public interface RentalOfferMapper {
     );
 
     List<RentalOfferResponse> findAllRentalOffersWithImages();
+    List<RentalOfferAddReview> selectRentalOfferAndReview(int rentalOfferIdx);
 }
