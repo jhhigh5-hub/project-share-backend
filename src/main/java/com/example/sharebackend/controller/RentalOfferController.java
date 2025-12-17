@@ -3,10 +3,11 @@ package com.example.sharebackend.controller;
 import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
-import com.example.sharebackend.domain.RentalOfferAddReview;
+import com.example.sharebackend.domain.Review;
+import com.example.sharebackend.mapper.ReviewMapper;
+import com.example.sharebackend.response.RentalOfferAddReviewResponse;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.request.RentalOfferAddRequest;
-import com.example.sharebackend.response.CarListResponse;
 import com.example.sharebackend.response.RentalOfferAddResponse;
 import com.example.sharebackend.response.RentalOfferListResponse;
 import com.example.sharebackend.response.RentalOfferResponse;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +31,7 @@ import java.util.UUID;
 @Transactional
 public class RentalOfferController {
     final RentalOfferMapper rentalOfferMapper;
+    final ReviewMapper reviewMapper;
 
     @PostMapping("/rental-offer")
     public RentalOfferAddResponse addRentalOffer(@ModelAttribute RentalOfferAddRequest rentalOfferAddRequest,
@@ -106,22 +109,61 @@ public class RentalOfferController {
 
     @GetMapping("/rental-offer")
     public RentalOfferListResponse rentalOfferInfoHandle() {
+        // 매물 전체 조회
+        List<RentalOfferAddReviewResponse> rentalOfferAllList = rentalOfferMapper.findAllRentalOffersWithImages();
+        System.out.println("rentalOfferAllList: " + rentalOfferAllList);
 
-        List<RentalOfferResponse> rentalOffersWithImages = rentalOfferMapper.findAllRentalOffersWithImages();
+        // 매물 idx 목록 추출
+        List<Integer> ids = rentalOfferAllList.stream()
+                .map(RentalOfferAddReviewResponse :: getIdx)
+                .toList();
+
+        // 해당 idx들의 이미지 조회
+        List<CarImg> imgList =
+                ids.isEmpty() ? List.of() : rentalOfferMapper.rentalOfferAllImages(ids);
+
+
+        // 매물 + 이미지 묶기
+        List<RentalOfferAllImages> result = new ArrayList<>();
+        for(RentalOfferAddReviewResponse o : rentalOfferAllList) {
+            List<String> image = imgList.stream()
+                    .filter(img -> img.getRentalOfferIdx() == o.getIdx())
+                    .map(CarImg::getImg).toList();
+
+            RentalOfferAllImages dto =
+                    RentalOfferAllImages.builder()
+                            .idx(o.getIdx())
+                            .rentalPrice(o.getRentalPrice())
+                            .description(o.getDescription())
+                            .corporation(o.getCorporation())
+                            .modelName(o.getModelName())
+                            .carType(o.getCarType())
+                            .modelYear(o.getModelYear().getYear())
+                            .fewSeats(o.getFewSeats())
+                            .gearType(o.getGearType())
+                            .images(image)
+                            .build();
+            result.add(dto);
+        }
+
         int count = rentalOfferMapper.countAllRentalOffer();
-
-        return RentalOfferListResponse.builder()
-                .success(true).rentalOfferResponseList(rentalOffersWithImages)
-                .countAllRentalOffer(count).build();
+        return RentalOfferListResponse.builder().success(true).countAllRentalOffer(count)
+                .rentalOfferListResponse(result).build();
     }
+
+
 
     @GetMapping("/rental-offer/{rentalOfferIdx}")
     public RentalOfferResponse rentalOfferReviewHandle(@PathVariable int rentalOfferIdx) {
-        List<RentalOfferAddReview> rentalOfferAddReviewslist = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
-        if (rentalOfferAddReviewslist == null) {
+        List<RentalOfferAddReviewResponse> rentalOfferAddReviewslist = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
+        List<CarImg> cImg = rentalOfferMapper.findCarImgs(rentalOfferIdx);
+        List<RentalOfferReviewResponse> reviewList = reviewMapper.selectByRentalOfferIdx(rentalOfferIdx);
+        if(rentalOfferAddReviewslist == null){
             return RentalOfferResponse.builder().success(false).message("존재하지 않는 매물입니다.").build();
         }
 
-        return RentalOfferResponse.builder().success(true).rentalOfferAddReview(rentalOfferAddReviewslist).build();
+    return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg)
+            .rentalOfferAddReview(rentalOfferAddReviewslist)
+            .rentalOfferReview(reviewList).build();
     }
 }
