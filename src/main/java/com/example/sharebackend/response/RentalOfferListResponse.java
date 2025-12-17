@@ -1,5 +1,6 @@
 package com.example.sharebackend.response;
 
+import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,13 @@ import java.util.List;
 public class RentalOfferListResponse {
     boolean success;
     String message;
-    List<RentalOfferResponse> rentalOfferResponseList;
     int countAllRentalOffer;
+    List<RentalOfferAllImages> rentalOfferListResponse;
+
+
+
+
+
+
+
 }
