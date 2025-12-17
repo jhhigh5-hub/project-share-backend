@@ -14,6 +14,7 @@ import com.example.sharebackend.response.RentalOfferListResponse;
 import com.example.sharebackend.response.RentalOfferResponse;
 import com.example.sharebackend.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -181,5 +183,15 @@ public class RentalOfferController {
     return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg)
             .rentalOfferAddReview(rentalOfferAddReviewslist)
             .rentalOfferReview(reviewList).build();
+    }
+
+    @GetMapping("/rental-offer/day")
+    public RentalOfferResponse rentalOfferDayListHandle(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        List<RentalOfferDayListResponse> rentalOfferDayList = rentalOfferMapper.findAvailableRentalOffers(startDate, endDate);
+
+        return RentalOfferResponse.builder().success(true).total(rentalOfferDayList.size()).rentalOfferDayList(rentalOfferDayList).build();
     }
 }

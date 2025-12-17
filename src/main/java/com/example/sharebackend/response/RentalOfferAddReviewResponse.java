@@ -12,7 +12,7 @@ public class RentalOfferAddReviewResponse {
     String nickname;
 
     // rental_offer
-    int idx;
+    int Idx;
     String accountId;
     int rentalPrice;
     String description;

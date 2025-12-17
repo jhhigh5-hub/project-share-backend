@@ -13,8 +13,10 @@ import java.util.List;
 public class RentalOfferResponse {
     boolean success;
     String message;
+    int total;
     List<Review> reviewList;
     List<RentalOfferAddReviewResponse> rentalOfferAddReview;
     List<CarImg> rentalOfferCarImg;
     List<RentalOfferReviewResponse> rentalOfferReview;
+    List<RentalOfferDayListResponse> rentalOfferDayList;
 }
