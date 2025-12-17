@@ -17,11 +17,4 @@ public class RentalOfferListResponse {
     String message;
     int countAllRentalOffer;
     List<RentalOfferAllImages> rentalOfferListResponse;
-
-
-
-
-
-
-
 }

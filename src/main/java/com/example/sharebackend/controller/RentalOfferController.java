@@ -4,6 +4,7 @@ import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
 import com.example.sharebackend.domain.Review;
+import com.example.sharebackend.mapper.CarMapper;
 import com.example.sharebackend.mapper.ReviewMapper;
 import com.example.sharebackend.response.RentalOfferAddReviewResponse;
 import com.example.sharebackend.mapper.RentalOfferMapper;
@@ -34,18 +35,32 @@ import java.util.UUID;
 public class RentalOfferController {
     final RentalOfferMapper rentalOfferMapper;
     final ReviewMapper reviewMapper;
+    final CarMapper carMapper;
 
     @PostMapping("/rental-offer")
     public RentalOfferAddResponse addRentalOffer(@ModelAttribute RentalOfferAddRequest rentalOfferAddRequest,
                                                  @RequestAttribute String currentAccountId,
-                                                 @RequestAttribute String currentNickName) throws IOException {
+                                                 @RequestAttribute String currentNickname) throws IOException {
 
         RentalOffer rentalOffer = new RentalOffer();
         rentalOffer.setAccountId(currentAccountId);
-        rentalOffer.setNickName(currentNickName);
-        rentalOffer.setCarIdx(rentalOfferAddRequest.getCarIdx());
+        rentalOffer.setNickName(currentNickname);
         rentalOffer.setRentalPrice(rentalOfferAddRequest.getRentalPrice());
         rentalOffer.setDescription(rentalOfferAddRequest.getDescription());
+
+
+        int carIdx = rentalOfferAddRequest.getCarIdx();
+        Car carDetail = carMapper.findCarByIdx(carIdx);
+        if (carDetail == null) {
+            return RentalOfferAddResponse.builder().success(false).message("해당 차량 정보를 찾을 수 없습니다.").build();
+        }
+        rentalOffer.setCarIdx(carIdx);
+        rentalOffer.setCorporation(carDetail.getCorporation());
+        rentalOffer.setModelName(carDetail.getModelName());
+        rentalOffer.setCarType(carDetail.getCarType());
+        rentalOffer.setModelYear(carDetail.getModelYear());
+        rentalOffer.setFewSeats(carDetail.getFewSeats());
+        rentalOffer.setGearType(carDetail.getGearType());
 
         int rentalOfferInsertResult = rentalOfferMapper.insertRentalOffer(rentalOffer);
 
@@ -88,7 +103,7 @@ public class RentalOfferController {
 
                 CarImg carImg = new CarImg();
                 carImg.setRentalOfferIdx(generatedRentalOfferIdx);
-                carImg.setImg(folderUuid + "/" + uniqueFileName);
+                carImg.setImg("/car-images/"+folderUuid + "/" + uniqueFileName);
 
                 int carImgInsertResult = rentalOfferMapper.insertCarImg(carImg);
 

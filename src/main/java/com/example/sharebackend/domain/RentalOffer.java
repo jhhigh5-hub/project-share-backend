@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.type.Alias;
 
-import java.time.LocalDate;
+import java.time.Year;
 
 @Setter
 @Getter
@@ -20,8 +20,7 @@ public class RentalOffer {
     String corporation;
     String modelName;
     String carType;
-    LocalDate modelYear;
+    Year modelYear;
     int fewSeats;
     String gearType;
-
 }
