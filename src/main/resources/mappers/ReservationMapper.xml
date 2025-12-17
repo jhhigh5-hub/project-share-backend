@@ -49,6 +49,11 @@
             order by reservation.idx desc
     </select>
 
+    <!-- 해당 아이디 예약 조회 -->
+    <select id="selectById" parameterType="int" resultType="Reservation">
+        select * from reservation where idx = #{reservationIdx}
+    </select>
+
     <!-- 해당 아이디 예약 총 개수 -->
     <select id="selectAllCount" parameterType="string" resultType="int">
         select count(*) from reservation where account_id=#{accountId}

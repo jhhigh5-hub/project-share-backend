@@ -15,6 +15,9 @@ public interface ReservationMapper {
     // 예약 리스트 조회
     List<Reservation> selectListAll(String accountId);
 
+    // 해당 아이디 예약 조회
+    Reservation selectById(int reservationIdx);
+
     // 예약 총 횟수
     int selectAllCount(String accountId);
 
