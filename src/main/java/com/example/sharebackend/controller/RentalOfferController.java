@@ -118,10 +118,10 @@ public class RentalOfferController {
     @GetMapping("/rental-offer/{rentalOfferIdx}")
     public RentalOfferResponse rentalOfferReviewHandle(@PathVariable int rentalOfferIdx) {
         List<RentalOfferAddReview> rentalOfferAddReviewslist = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
-        if(rentalOfferAddReviewslist == null){
+        if (rentalOfferAddReviewslist == null) {
             return RentalOfferResponse.builder().success(false).message("존재하지 않는 매물입니다.").build();
         }
 
-    return RentalOfferResponse.builder().success(true).rentalOfferAddReview(rentalOfferAddReviewslist).build();
+        return RentalOfferResponse.builder().success(true).rentalOfferAddReview(rentalOfferAddReviewslist).build();
     }
 }
