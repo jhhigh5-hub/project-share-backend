@@ -10,4 +10,6 @@ import java.time.LocalDate;
 public class RentalOfferDayRequest {
     LocalDate startDate;
     LocalDate endDate;
+
+
 }
