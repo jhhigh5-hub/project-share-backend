@@ -16,12 +16,6 @@ public class RentalOfferListResponse {
     boolean success;
     String message;
     int countAllRentalOffer;
+    int rentalOfferIdx;
     List<RentalOfferAllImages> rentalOfferListResponse;
-
-
-
-
-
-
-
 }

@@ -9,6 +9,7 @@ import java.util.List;
 @Mapper
 public interface CarMapper {
     int insertCar (Car car);
+    Car findCarByIdx(int idx);
     List<Car> findAllCars(@Param("query") String query);
     int countAllCars(@Param("query") String query);
 }
