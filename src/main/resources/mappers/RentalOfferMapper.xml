@@ -140,8 +140,9 @@
 
     <!-- 특정 매물 정보 -->
     <select id="selectRentalOfferAndReview" resultType="RentalOfferAddReviewResponse">
-        select rental_offer.*, car.*
+        select account.nickname, rental_offer.idx, rental_offer.rental_price, rental_offer.description, car.*
         from rental_offer
+        join account on account.id = rental_offer.account_id
         join car on rental_offer.car_idx = car.idx
         where rental_offer.idx = #{rentalOfferIdx};
     </select>

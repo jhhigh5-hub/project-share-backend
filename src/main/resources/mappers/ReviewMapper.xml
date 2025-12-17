@@ -13,4 +13,12 @@
     <select id="selectByReservationIdx" resultType="Review">
         select * from review where reservation_idx=#{reservationIdx}
     </select>
+
+    <!-- rentalOfferIdx에 해당하는 모든 리뷰 조회 -->
+    <select id="selectByRentalOfferIdx" resultType="RentalOfferReviewResponse">
+        select account.nickname, review.* from review
+        join reservation on review.reservation_idx = reservation.idx
+        join account on reservation.account_id = account.id
+        where reservation.rental_offer_idx = #{rentalOfferIdx}
+    </select>
 </mapper>

@@ -3,6 +3,8 @@ package com.example.sharebackend.controller;
 import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
+import com.example.sharebackend.domain.Review;
+import com.example.sharebackend.mapper.ReviewMapper;
 import com.example.sharebackend.response.RentalOfferAddReviewResponse;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.request.RentalOfferAddRequest;
@@ -29,6 +31,7 @@ import java.util.UUID;
 @Transactional
 public class RentalOfferController {
     final RentalOfferMapper rentalOfferMapper;
+    final ReviewMapper reviewMapper;
 
     @PostMapping("/rental-offer")
     public RentalOfferAddResponse addRentalOffer(@ModelAttribute RentalOfferAddRequest rentalOfferAddRequest,
@@ -153,10 +156,13 @@ public class RentalOfferController {
     public RentalOfferResponse rentalOfferReviewHandle(@PathVariable int rentalOfferIdx) {
         List<RentalOfferAddReviewResponse> rentalOfferAddReviewslist = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
         List<CarImg> cImg = rentalOfferMapper.findCarImgs(rentalOfferIdx);
+        List<RentalOfferReviewResponse> reviewList = reviewMapper.selectByRentalOfferIdx(rentalOfferIdx);
         if(rentalOfferAddReviewslist == null){
             return RentalOfferResponse.builder().success(false).message("존재하지 않는 매물입니다.").build();
         }
 
-    return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg).rentalOfferAddReview(rentalOfferAddReviewslist).build();
+    return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg)
+            .rentalOfferAddReview(rentalOfferAddReviewslist)
+            .rentalOfferReview(reviewList).build();
     }
 }
