@@ -60,29 +60,6 @@
     </resultMap>
 
     <!-- ============================================== -->
-    <!-- 4. 목록 조회 쿼리들 (모두 위에 정의된 rentalOfferResponseMap 참조 💡) -->
-    <!-- ============================================== -->
-
-    <!-- 모든 매물과 그에 연결된 이미지 리스트를 조회하는 쿼리 (홈 화면) -->
-
-<!--    <select id="findAllRentalOffersWithImages"-->
-<!--            resultMap="rentalOfferResponseMap"> &lt;!&ndash; 위에 정의된 resultMap의 id만 참조! &ndash;&gt;-->
-<!--        SELECT-->
-<!--        ro.idx AS ro_idx,-->
-<!--        ro.account_id,-->
-<!--        ro.car_idx,-->
-<!--        ro.rental_price,-->
-<!--        ro.description,-->
-<!--        ci.idx AS ci_idx,-->
-<!--        ci.rental_offer_idx AS ci_rental_offer_idx,-->
-<!--        ci.img AS img_url-->
-<!--        FROM-->
-<!--        rental_offer ro-->
-<!--        LEFT JOIN-->
-<!--        car_img ci ON ro.idx = ci.rental_offer_idx-->
-<!--        ORDER BY-->
-<!--        ro.idx DESC, ci.idx ASC-->
-<!--    </select>-->
 
     <!-- 매물 전체 조회 -->
     <select id="findAllRentalOffersWithImages" resultType="RentalOfferAddReviewResponse">
@@ -110,7 +87,7 @@
     <!-- 특정 날짜에 사용 가능한 매물과 그에 연결된 이미지 리스트 조회 (날짜 필터링 화면) -->
     <!-- resultMap을 사용해서 반환 타입을 RentalOfferResponse로 변경! -->
     <select id="findAvailableRentalOffers"
-            resultMap="rentalOfferResponseMap"> <!-- 위에 정의된 resultMap의 id만 참조! -->
+            resultMap="rentalOfferResponseMap" parameterType="map"> <!-- 위에 정의된 resultMap의 id만 참조! -->
         SELECT
         ro.idx AS ro_idx,
         ro.account_id, <!-- ro.member_id 대신 ro.account_id (이전 피드백에서 수정) -->
@@ -132,11 +109,11 @@
         res.rental_offer_idx = ro.idx
         AND res.reservation_status = TRUE <!-- is_reserved = 1 대신 reservation_status = TRUE (이전 피드백에서 수정) -->
         AND (
-        (res.start_date &lt; #{desiredEndDate}) AND (res.end_date &gt; #{desiredStartDate})
+        (res.start_date &lt; #{endDate}) AND (res.end_date &gt; #{startDate})
         )
         )
         ORDER BY
-        ro.idx DESC, ci.idx ASC
+        ro.idx DESC
     </select>
 
     <!-- 특정 매물 정보 -->
