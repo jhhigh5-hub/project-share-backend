@@ -1,5 +1,6 @@
 package com.example.sharebackend.response;
 
+import com.example.sharebackend.domain.Reservation;
 import com.example.sharebackend.domain.Review;
 import lombok.*;
 
@@ -15,4 +16,5 @@ public class ReviewResponse {
     String message;
     Review review;
     List<Review> reviewList;
+    List<Reservation> reservationList;
 }

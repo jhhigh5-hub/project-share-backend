@@ -10,9 +10,10 @@
     </insert>
 
     <!-- reservationIdx에 해당하는 모든 리뷰 조회  -->
-    <select id="selectByReservationIdx" resultType="Review">
+    <select id="selectByReservationIdxList" resultType="Review">
         select * from review where reservation_idx=#{reservationIdx}
     </select>
+
 
     <!-- rentalOfferIdx에 해당하는 모든 리뷰 조회 -->
     <select id="selectByRentalOfferIdx" resultType="RentalOfferReviewResponse">

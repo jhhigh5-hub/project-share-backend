@@ -8,8 +8,12 @@ import java.util.List;
 
 @Mapper
 public interface ReviewMapper {
-    int insertOne(Review review);
-    List<Review> selectByReservationIdx(int  reservationIdx);
+    // 리뷰 작성
+    int insertOne(Review  review);
 
+    // reservationIdx에 해당하는 모든 리뷰 조회
+    List<Review> selectByReservationIdxList(int  reservationIdx);
+
+    //  rentalOfferIdx에 해당하는 모든 리뷰 조회
     List<RentalOfferReviewResponse> selectByRentalOfferIdx(int rentalOfferIdx);
 }
