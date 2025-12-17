@@ -1,10 +1,7 @@
 package com.example.sharebackend.controller;
 
-import com.example.sharebackend.domain.Car;
 import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
-import com.example.sharebackend.domain.Review;
-import com.example.sharebackend.mapper.CarMapper;
 import com.example.sharebackend.mapper.ReviewMapper;
 import com.example.sharebackend.response.RentalOfferAddReviewResponse;
 import com.example.sharebackend.mapper.RentalOfferMapper;
@@ -14,7 +11,6 @@ import com.example.sharebackend.response.RentalOfferListResponse;
 import com.example.sharebackend.response.RentalOfferResponse;
 import com.example.sharebackend.response.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -35,32 +30,16 @@ import java.util.UUID;
 public class RentalOfferController {
     final RentalOfferMapper rentalOfferMapper;
     final ReviewMapper reviewMapper;
-    final CarMapper carMapper;
 
     @PostMapping("/rental-offer")
     public RentalOfferAddResponse addRentalOffer(@ModelAttribute RentalOfferAddRequest rentalOfferAddRequest,
-                                                 @RequestAttribute String currentAccountId,
-                                                 @RequestAttribute String currentNickname) throws IOException {
+                                                 @RequestAttribute String currentAccountId) throws IOException {
 
         RentalOffer rentalOffer = new RentalOffer();
         rentalOffer.setAccountId(currentAccountId);
-        rentalOffer.setNickName(currentNickname);
+        rentalOffer.setCarIdx(rentalOfferAddRequest.getCarIdx());
         rentalOffer.setRentalPrice(rentalOfferAddRequest.getRentalPrice());
         rentalOffer.setDescription(rentalOfferAddRequest.getDescription());
-
-
-        int carIdx = rentalOfferAddRequest.getCarIdx();
-        Car carDetail = carMapper.findCarByIdx(carIdx);
-        if (carDetail == null) {
-            return RentalOfferAddResponse.builder().success(false).message("해당 차량 정보를 찾을 수 없습니다.").build();
-        }
-        rentalOffer.setCarIdx(carIdx);
-        rentalOffer.setCorporation(carDetail.getCorporation());
-        rentalOffer.setModelName(carDetail.getModelName());
-        rentalOffer.setCarType(carDetail.getCarType());
-        rentalOffer.setModelYear(carDetail.getModelYear());
-        rentalOffer.setFewSeats(carDetail.getFewSeats());
-        rentalOffer.setGearType(carDetail.getGearType());
 
         int rentalOfferInsertResult = rentalOfferMapper.insertRentalOffer(rentalOffer);
 
@@ -103,7 +82,7 @@ public class RentalOfferController {
 
                 CarImg carImg = new CarImg();
                 carImg.setRentalOfferIdx(generatedRentalOfferIdx);
-                carImg.setImg("/car-images/"+folderUuid + "/" + uniqueFileName);
+                carImg.setImg(folderUuid + "/" + uniqueFileName);
 
                 int carImgInsertResult = rentalOfferMapper.insertCarImg(carImg);
 
@@ -173,25 +152,16 @@ public class RentalOfferController {
 
     @GetMapping("/rental-offer/{rentalOfferIdx}")
     public RentalOfferResponse rentalOfferReviewHandle(@PathVariable int rentalOfferIdx) {
-        RentalOfferAddReviewResponse rentalOfferAddReviewslist = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
+        RentalOfferAddReviewResponse rentalOfferAddReviewList = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
         List<CarImg> cImg = rentalOfferMapper.findCarImgs(rentalOfferIdx);
-        List<RentalOfferReviewResponse> reviewList = reviewMapper.selectByRentalOfferIdx(rentalOfferIdx);
-        if(rentalOfferAddReviewslist == null){
+        List<RentalOfferReviewListResponse> reviewList = reviewMapper.selectByRentalOfferIdx(rentalOfferIdx);
+        if(rentalOfferAddReviewList == null){
             return RentalOfferResponse.builder().success(false).message("존재하지 않는 매물입니다.").build();
         }
+        System.out.println("reviewList: " + reviewList);
 
     return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg)
-            .rentalOfferAddReview(rentalOfferAddReviewslist)
-            .rentalOfferReview(reviewList).build();
-    }
-
-    @GetMapping("/rental-offer/day")
-    public RentalOfferResponse rentalOfferDayListHandle(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
-        List<RentalOfferDayListResponse> rentalOfferDayList = rentalOfferMapper.findAvailableRentalOffers(startDate, endDate);
-
-        return RentalOfferResponse.builder().success(true).total(rentalOfferDayList.size()).rentalOfferDayList(rentalOfferDayList).build();
+            .rentalOfferAddReview(rentalOfferAddReviewList)
+            .rentalOfferReviewListResponses(reviewList).build();
     }
 }

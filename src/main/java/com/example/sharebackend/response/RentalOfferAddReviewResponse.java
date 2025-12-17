@@ -8,11 +8,11 @@ import java.time.LocalDate;
 @Setter
 @Getter
 public class RentalOfferAddReviewResponse {
+    int idx;
     // account
     String nickname;
 
     // rental_offer
-    int Idx;
     String accountId;
     int rentalPrice;
     String description;

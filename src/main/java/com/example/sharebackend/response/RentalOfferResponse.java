@@ -14,9 +14,10 @@ public class RentalOfferResponse {
     boolean success;
     String message;
     int total;
-    List<Review> reviewList;
     RentalOfferAddReviewResponse rentalOfferAddReview;
+    List<Review> reviewList;
     List<CarImg> rentalOfferCarImg;
     List<RentalOfferReviewResponse> rentalOfferReview;
     List<RentalOfferDayListResponse> rentalOfferDayList;
+    List<RentalOfferReviewListResponse> rentalOfferReviewListResponses;
 }
