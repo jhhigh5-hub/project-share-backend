@@ -12,5 +12,5 @@ public class LoginResponse {
     boolean success;
     String message;
     Account account;
-    String token;
+    String auth;
 }

@@ -159,7 +159,6 @@ public class RentalOfferController {
         if(rentalOfferAddReviewList == null){
             return RentalOfferResponse.builder().success(false).message("존재하지 않는 매물입니다.").build();
         }
-        System.out.println("reviewList: " + reviewList);
 
     return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg)
             .rentalOfferAddReview(rentalOfferAddReviewList)
