@@ -7,9 +7,12 @@
         insert into car (corporation, model_name, car_type, model_year, few_seats, gear_type)
         values (#{corporation}, #{modelName}, #{carType}, #{modelYear}, #{fewSeats}, #{gearType})
     </insert>
+    <!-- idx 해당 차 정보 조회 -->
     <select id="findCarByIdx" resultType="Car">
         select * from car where idx = #{idx}
     </select>
+
+    <!-- query에 검색 및 총 갯수 -->
     <select id="findAllCars" resultType="com.example.sharebackend.domain.Car" >
         select * from car
         where corporation like concat('%', #{query}, '%')

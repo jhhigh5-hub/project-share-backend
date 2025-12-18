@@ -48,7 +48,6 @@ public class CarController {
 
         // 차트용
         List<CarChartResultResponse> chartList = carMapper.ChartList();
-
         if(chartList == null){
             return CarChartResponse.builder().success(false).message("정보가 없습니다.").build();
         }
