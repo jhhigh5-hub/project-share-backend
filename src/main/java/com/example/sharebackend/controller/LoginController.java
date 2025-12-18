@@ -25,7 +25,7 @@ public class LoginController {
     final AccountMapper accountMapper;
 
     @PostMapping("/login")
-    public LoginResponse loginHandle(@Valid @RequestBody LoginRequest lrt, HttpSession session){
+    public LoginResponse loginHandle(@Valid @RequestBody LoginRequest lrt){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Account account = accountMapper.selectAll(lrt.getId());
 
@@ -34,11 +34,7 @@ public class LoginController {
                     .withIssuedAt(new Date()).withIssuer("carshare")
                     .sign(Algorithm.HMAC256("secretKey"));
 
-            Cookie cookie = new Cookie("Authorization", token);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-
-            return  LoginResponse.builder().success(true).message("로그인 성공").account(account).token(token).build();
+            return  LoginResponse.builder().success(true).message("로그인 성공").account(account).auth(token).build();
 
         }
         return LoginResponse.builder().success(false)

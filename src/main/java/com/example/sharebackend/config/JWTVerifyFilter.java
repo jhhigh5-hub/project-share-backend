@@ -28,8 +28,13 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
             String uri = request.getRequestURI();   // 요청 주소
             String method = request.getMethod();
 
-            if (uri.equals("/signup") || uri.equals("/login") || uri.equals("/verify-email") ||
-                    uri.equals("/rental-offer") || uri.equals("/rental-offer/day") || uri.startsWith("/car-images")) {
+            if (uri.equals("/signup")
+                    || uri.equals("/login")
+                    || uri.equals("/verify-email")
+                    || method.equalsIgnoreCase("options")
+                    || uri.startsWith("/rental-offer")
+                    || uri.equals("/rental-offer/day")
+                    || uri.startsWith("/car-images")) {
                 return true;
             } else {
                 return false;
@@ -38,23 +43,37 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
 
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-            String token = request.getHeader("Token");
-
-            if (token == null) {
-                response.getWriter().println("{\"success\":false, \"cause\":\"Token is null\"}");
-
+            if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+                filterChain.doFilter(request, response);
                 return;
             }
+
+            String authHeader = request.getHeader("Authorization");
+
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+//                response.getWriter().println("{\"success\":false, \"cause\":\"Token is null\"}");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+            String token = authHeader.substring(7);
+
             DecodedJWT jwt;
             try {
                 jwt = JWT.require(Algorithm.HMAC256("secretKey")).withIssuer("carshare").build().verify(token);
             } catch (Exception e) {
-                response.getWriter().println("{\"success\": false}");
+//                response.getWriter().println("{\"success\": false}");
+//                return;
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
 
             String subject = jwt.getSubject();   // auth할 때 인증했던 계정의 id를 설정해서 보내뒀음.
             Account account = accountMapper.findById(subject);
+            if (account == null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
             request.setAttribute("currentAccountId", account.getId());
             request.setAttribute("currentNickname", account.getNickname());
             filterChain.doFilter(request, response);
