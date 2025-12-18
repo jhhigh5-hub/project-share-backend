@@ -111,6 +111,7 @@ public class RentalOfferController {
         // 매물 전체 조회
         List<RentalOfferAddReviewResponse> rentalOfferAllList = rentalOfferMapper.findAllRentalOffersWithImages();
 
+
         // 매물 idx 목록 추출
         List<Integer> ids = rentalOfferAllList.stream()
                 .map(RentalOfferAddReviewResponse :: getIdx)
@@ -159,6 +160,7 @@ public class RentalOfferController {
         if(rentalOfferAddReviewList == null){
             return RentalOfferResponse.builder().success(false).message("존재하지 않는 매물입니다.").build();
         }
+
 
     return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg)
             .rentalOfferAddReview(rentalOfferAddReviewList)

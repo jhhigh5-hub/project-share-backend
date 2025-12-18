@@ -5,8 +5,10 @@ import com.example.sharebackend.domain.Reservation;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.mapper.ReservationMapper;
 import com.example.sharebackend.request.ReservationRequest;
+import com.example.sharebackend.request.ReservationStatusUpdate;
 import com.example.sharebackend.response.ReservationListResponse;
 import com.example.sharebackend.response.ReservationResponse;
+import com.example.sharebackend.response.ReservationStatusUpdateResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Update;
@@ -34,7 +36,7 @@ public class ReservationController {
         int price = rentalOfferMapper.selectByRentalPrice(rvr.getRentalOfferIdx());
 
         if (price == 0) {
-            return ReservationResponse.builder().success(false).build();
+            return ReservationResponse.builder().success(false).message("금액오류").build();
         }
 
         System.out.println("price : " + price);
@@ -110,5 +112,24 @@ public class ReservationController {
 
         return ReservationResponse.builder().success(false).message("예약철회 실패").build();
     }
+
+    @PatchMapping("/reservation/statusUpdate")
+    public ReservationStatusUpdateResponse reservationStatusUpdate(@RequestBody ReservationStatusUpdate rsu,
+                                                                   @RequestAttribute("currentAccountId") String accountId) {
+
+        Reservation reservation = reservationMapper.selectReservationForReturn(rsu.getReservationIdx());
+
+        if(reservation.getAccountId() == null) {
+            return ReservationStatusUpdateResponse.builder().success(false).message("예약 정보가 없습니다.").build();
+        }
+
+        if(!accountId.equals(reservation.getAccountId())) {
+            return ReservationStatusUpdateResponse.builder().success(true).message("접근 불가.").build();
+        }
+
+        reservationMapper.reservationStatusUpdate(reservation.getIdx(), accountId);
+
+        return ReservationStatusUpdateResponse.builder().success(true).message("이용해 주셔서 감사합니다.").build();
+      }
 
 }

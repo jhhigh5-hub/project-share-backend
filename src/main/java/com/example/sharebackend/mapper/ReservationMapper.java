@@ -12,11 +12,14 @@ public interface ReservationMapper {
     // 예약하기
     int insertOne(Reservation reservation);
 
-    // 예약 리스트 조회
+    // 해당 아이디 예약 리스트 조회
     List<Reservation> selectListAll(String accountId);
 
     // 해당 아이디 예약 조회
     Reservation selectById(int reservationIdx);
+
+    // 반납절차 확인용 예약 조회
+    Reservation selectReservationForReturn(int reservationIdx);
 
     // 예약 총 횟수
     int selectAllCount(String accountId);
@@ -26,5 +29,8 @@ public interface ReservationMapper {
 
     // 예약 취소
     int reservationDelete(int idx, String accountId);
+
+    // 예약 상태 업데이트
+    int reservationStatusUpdate(int reservationIdx, String accountId);
 
 }

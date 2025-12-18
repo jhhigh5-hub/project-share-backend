@@ -37,6 +37,12 @@
     <!-- 전체 RentalOffer 개수 조회 (카운트용) -->
     <select id="countAllRentalOffer" resultType="int">
         select count(*) from rental_offer
+        where not exists(
+        select 1
+        from reservation
+        where reservation.rental_offer_idx = rental_offer.idx
+        and reservation_status = '사용 중'
+        );
     </select>
 
     <!-- ============================================== -->
@@ -63,9 +69,23 @@
 
     <!-- 매물 전체 조회 -->
     <select id="findAllRentalOffersWithImages" resultType="RentalOfferAddReviewResponse">
-        select rental_offer.*, account.nickname, car.corporation, car.model_name, car.car_type, car.model_year, car.few_seats, car.gear_type from rental_offer
+        select rental_offer.*,
+        account.nickname,
+        car.corporation,
+        car.model_name,
+        car.car_type,
+        car.model_year,
+        car.few_seats,
+        car.gear_type
+        from rental_offer
         left join account on rental_offer.account_id = account. id
         left join car on rental_offer.car_idx = car.idx
+        where not exists (
+        select 1
+        from reservation
+        where reservation.rental_offer_idx = rental_offer.idx
+        and reservation.reservation_status = '사용 중'
+        );
     </select>
     <!-- 매물 전체 이미지 -->
     <select id="rentalOfferAllImages" resultType="CarImg">
@@ -116,9 +136,9 @@
         FROM reservation res
         WHERE
         res.rental_offer_idx = ro.idx
-        AND res.reservation_status = '사용 중' <!-- is_reserved = 1 대신 reservation_status = TRUE (이전 피드백에서 수정) -->
+        AND res.reservation_status = '사용 중'
         AND (
-        (res.start_date &lt; #{endDate}) AND (res.end_date &gt; #{startDate})
+        (res.start_date &lt;= #{endDate}) AND (res.end_date &gt;= #{startDate})
         )
         )
         ORDER BY
