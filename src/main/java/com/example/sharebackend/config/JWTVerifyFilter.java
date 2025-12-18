@@ -32,13 +32,15 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
                     || uri.equals("/login")
                     || uri.equals("/verify-email")
                     || method.equalsIgnoreCase("options")
-                    || uri.startsWith("/rental-offer")
                     || uri.equals("/rental-offer/day")
                     || uri.startsWith("/car-images")) {
                 return true;
-            } else {
-                return false;
             }
+
+            if (method.equalsIgnoreCase("Get")&& uri.equals("/rental-offer")) {
+                return true;
+            }
+            return false;
         }
 
         @Override

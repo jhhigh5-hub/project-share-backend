@@ -84,7 +84,7 @@ public class RentalOfferController {
 
                 CarImg carImg = new CarImg();
                 carImg.setRentalOfferIdx(generatedRentalOfferIdx);
-                carImg.setImg(folderUuid + "/" + uniqueFileName);
+                carImg.setImg("/car-images/" + folderUuid + "/" + uniqueFileName);
 
                 int carImgInsertResult = rentalOfferMapper.insertCarImg(carImg);
 
