@@ -1,5 +1,6 @@
 package com.example.sharebackend.controller;
 
+import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.Reservation;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.mapper.ReservationMapper;
@@ -8,6 +9,7 @@ import com.example.sharebackend.response.ReservationListResponse;
 import com.example.sharebackend.response.ReservationResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
@@ -49,15 +51,18 @@ public class ReservationController {
                 rvr.getStartDate(),
                 rvr.getEndDate()
         );
+
         if (ct > 0) {
             return ReservationResponse.builder().success(false).message("이미 예약된 날짜입니다.").build();
         }
+
         rvt.setPaymentAmount(total);
-        rvt.setReservationStatus(true);
+        rvt.setReservationStatus("사용 중");
 
         reservationMapper.insertOne(rvt);
 
-        return ReservationResponse.builder().success(true).reservation(rvt).build();
+        return ReservationResponse.builder().success(true).reservation(rvt)
+                .message("예약이 완료 되었습니다.").build();
     }
 
     // 시작날짜, 끝날짜, 하루 금액을 가져와서 for문 돌리면 if 처리
@@ -80,7 +85,7 @@ public class ReservationController {
         }
         return total;
     }
-
+    // 예약 기록 조회
     @GetMapping("/reservation")
     public ReservationListResponse ReservationSelectHandle(@RequestAttribute("currentAccountId") String accountId) {
 
@@ -94,12 +99,11 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservation/{idx}")
-    public ReservationResponse deleteReservationHandle(@PathVariable int idx, @RequestAttribute("currentAccountId") String accountId,
-                                                       Reservation reservation) {
+    public ReservationResponse deleteReservationHandle(@PathVariable int idx, @RequestAttribute("currentAccountId") String accountId) {
         System.out.println("idx : " + idx);
         System.out.println("accountId : " + accountId);
 
-        int update = reservationMapper.ReservationStatusUpdate(idx, accountId);
+        int update = reservationMapper.reservationDelete(idx, accountId);
         if (update > 0) {
             return ReservationResponse.builder().success(true).message("예약이 철회 되었습니다.").build();
         }

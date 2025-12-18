@@ -116,7 +116,7 @@
         FROM reservation res
         WHERE
         res.rental_offer_idx = ro.idx
-        AND res.reservation_status = TRUE <!-- is_reserved = 1 대신 reservation_status = TRUE (이전 피드백에서 수정) -->
+        AND res.reservation_status = '사용 중' <!-- is_reserved = 1 대신 reservation_status = TRUE (이전 피드백에서 수정) -->
         AND (
         (res.start_date &lt; #{endDate}) AND (res.end_date &gt; #{startDate})
         )

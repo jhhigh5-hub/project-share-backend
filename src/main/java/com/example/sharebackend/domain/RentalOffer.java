@@ -17,10 +17,8 @@ public class RentalOffer {
     int rentalPrice;
     String description;
 
-    String corporation;
-    String modelName;
-    String carType;
-    Year modelYear;
-    int fewSeats;
-    String gearType;
+    Car car;
+
+
+    String img;
 }

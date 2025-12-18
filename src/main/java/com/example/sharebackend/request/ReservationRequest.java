@@ -21,6 +21,7 @@ public class ReservationRequest {
     LocalDate endDate;
 
 
+
     public Reservation toReservation() {
         Reservation reservation = new Reservation();
         reservation.setRentalOfferIdx(this.rentalOfferIdx);

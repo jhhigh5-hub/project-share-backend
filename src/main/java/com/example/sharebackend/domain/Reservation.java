@@ -15,8 +15,11 @@ public class Reservation {
     int rentalOfferIdx;
     LocalDate startDate;
     LocalDate endDate;
-    boolean reservationStatus;
+    String reservationStatus;
     int paymentAmount;
     RentalOffer rentalOffer;
+
+    Car car;
+    CarImg carImg;
 
 }
