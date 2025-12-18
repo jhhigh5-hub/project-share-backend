@@ -15,6 +15,6 @@ public class CarChartResponse {
     String message;
     int total;
     List<Car> cars;
-    List<CarChartResponse> carChartResponseList;
+    List<CarChartResultResponse> carChartResponseList;
 
 }
