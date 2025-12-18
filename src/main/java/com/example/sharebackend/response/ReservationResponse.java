@@ -18,6 +18,7 @@ public class ReservationResponse {
     String message;
     Reservation reservation;
     RentalOffer rentalOffer;
+    String reservationStatus;
 
 
 

@@ -3,6 +3,7 @@ package com.example.sharebackend.controller;
 import com.example.sharebackend.domain.CarImg;
 import com.example.sharebackend.domain.RentalOffer;
 import com.example.sharebackend.mapper.ReviewMapper;
+import com.example.sharebackend.request.RentalOfferDayRequest;
 import com.example.sharebackend.response.RentalOfferAddReviewResponse;
 import com.example.sharebackend.mapper.RentalOfferMapper;
 import com.example.sharebackend.request.RentalOfferAddRequest;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -149,7 +151,7 @@ public class RentalOfferController {
     }
 
 
-
+    // 특정 매물 조회
     @GetMapping("/rental-offer/{rentalOfferIdx}")
     public RentalOfferResponse rentalOfferReviewHandle(@PathVariable int rentalOfferIdx) {
         RentalOfferAddReviewResponse rentalOfferAddReviewList = rentalOfferMapper.selectRentalOfferAndReview(rentalOfferIdx);
@@ -164,4 +166,18 @@ public class RentalOfferController {
             .rentalOfferAddReview(rentalOfferAddReviewList)
             .rentalOfferReviewListResponses(reviewList).build();
     }
+
+    // 날짜에 해당하는 매물 조회
+    @GetMapping("/rental-offer/day")
+    public RentalOfferResponse rentalOfferDayListHandle(@RequestParam("startDate") LocalDate startDate,
+                                                        @RequestParam("endDate") LocalDate endDate) {
+        List<RentalOfferDayListResponse> dayList =
+                rentalOfferMapper.findAvailableRentalOffers(startDate, endDate);
+        if(dayList.isEmpty()){
+            return RentalOfferResponse.builder().success(false).message("매물 없음").build();
+        }
+
+        return RentalOfferResponse.builder().success(true).message("조회성공").rentalOfferDayList(dayList).build();
+    }
+
 }

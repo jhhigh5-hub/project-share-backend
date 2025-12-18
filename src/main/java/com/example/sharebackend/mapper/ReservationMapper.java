@@ -25,5 +25,6 @@ public interface ReservationMapper {
     int existsReservation(int rentalOfferIdx, LocalDate startDate, LocalDate endDate);
 
     // 예약 취소
-    int ReservationStatusUpdate(int idx, String accountId);
+    int reservationDelete(int idx, String accountId);
+
 }
