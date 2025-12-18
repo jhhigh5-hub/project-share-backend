@@ -62,9 +62,23 @@
             order by reservation.idx desc
     </select>
 
-    <!-- 해당 아이디 예약 조회 -->
+    <!-- view에 사용 : 해당 아이디 예약 조회 -->
     <select id="selectById" parameterType="int" resultType="Reservation">
-        select * from reservation where idx = #{reservationIdx}
+        select * from reservation
+        where reservation.idx = #{reservationIdx}
+        and not exists(
+        select 1
+        from rental_offer
+        where reservation.rental_offer_idx = rental_offer.idx
+        and reservation_status in ('사용 중', '취소됨')
+        );
+    </select>
+
+    <!-- 반납절차 확인용 예약 조회 -->
+    <select id="selectReservationForReturn" parameterType="int" resultType="Reservation">
+        select * from reservation
+        where reservation.idx = #{reservationIdx}
+        and reservation.reservation_status = '사용 중'
     </select>
 
     <!-- 해당 아이디 예약 총 개수 -->
@@ -86,6 +100,17 @@
     <delete id="reservationDelete" parameterType="Reservation" >
         update reservation set reservation_status='취소됨' where idx=#{idx} and account_id=#{accountId}
     </delete>
+
+    <!-- 예약 상태 업데이트 -->
+    <update id="reservationStatusUpdate" parameterType="map">
+        update reservation
+        join account on account.id = reservation.account_id
+        join rental_offer on rental_offer.idx = reservation.rental_offer_idx
+        set reservation_status = '사용완료'
+        where reservation_status = '사용 중'
+        and reservation.idx = #{reservationIdx}
+        and account.id = #{accountId};
+    </update>
 
 
 </mapper>

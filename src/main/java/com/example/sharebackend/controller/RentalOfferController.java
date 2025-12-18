@@ -110,7 +110,7 @@ public class RentalOfferController {
     public RentalOfferListResponse rentalOfferInfoHandle() {
         // 매물 전체 조회
         List<RentalOfferAddReviewResponse> rentalOfferAllList = rentalOfferMapper.findAllRentalOffersWithImages();
-        System.out.println("rentalOfferAllList: " + rentalOfferAllList);
+
 
         // 매물 idx 목록 추출
         List<Integer> ids = rentalOfferAllList.stream()
@@ -160,7 +160,7 @@ public class RentalOfferController {
         if(rentalOfferAddReviewList == null){
             return RentalOfferResponse.builder().success(false).message("존재하지 않는 매물입니다.").build();
         }
-        System.out.println("reviewList: " + reviewList);
+
 
     return RentalOfferResponse.builder().success(true).rentalOfferCarImg(cImg)
             .rentalOfferAddReview(rentalOfferAddReviewList)
