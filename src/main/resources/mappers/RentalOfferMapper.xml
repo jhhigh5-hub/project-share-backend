@@ -78,7 +78,7 @@
         car.few_seats,
         car.gear_type
         from rental_offer
-        left join account on rental_offer.account_id = account. id
+        left join account on rental_offer.account_id = account.id
         left join car on rental_offer.car_idx = car.idx
         where not exists (
         select 1
