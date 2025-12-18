@@ -13,7 +13,7 @@ public interface CarMapper {
     // 차등록
     int insertCar (Car car);
 
-    // idx 해당 차
+    // idx 해당 차 조회
     Car findCarByIdx(int idx);
 
     // query에 해당하는 모든 차와 갯수

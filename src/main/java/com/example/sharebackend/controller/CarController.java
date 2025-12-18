@@ -10,6 +10,7 @@ import com.example.sharebackend.response.CarAddResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,23 +47,24 @@ public class CarController {
     public CarChartResponse chartInfoHandle(){
 
         // 차트용
-        List<CarChartResultResponse> carChart = carMapper.ChartList();
-
-        if(carChart == null){
+        List<CarChartResultResponse> chartList = carMapper.ChartList();
+        if(chartList == null){
             return CarChartResponse.builder().success(false).message("정보가 없습니다.").build();
         }
 
-        for(CarChartResultResponse carChartResponse : carChart){
-            Car car = carMapper.findCarByIdx(carChartResponse.getIdx());
-            if(car == null) continue;
-            System.out.println(car.getIdx());
-            CarChartResultResponse result = new CarChartResultResponse();
-            result.setCorporation(car.getCorporation());
-            result.setModelName(car.getModelName());
-            result.setCount(car.getIdx());
-
+        List<Car> carList = new ArrayList<>();
+        for(CarChartResultResponse chart : chartList){
+            Car car = carMapper.findCarByIdx(chart.getIdx());
+            if(car != null) {
+                carList.add(car);
+            }
         }
-
-    return CarChartResponse.builder().success(true).build();
+        return CarChartResponse.builder()
+                .success(true)
+                .message("차트 데이터 조회 성공")
+                .total(carList.size())
+                .carChartResponseList(chartList)
+                .build();
     }
+
 }
