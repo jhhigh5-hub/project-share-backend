@@ -28,8 +28,8 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
             String uri = request.getRequestURI();   // 요청 주소
             String method = request.getMethod();
 
-            if (uri.equals("/signup") || uri.equals("/login") || uri.equals("/verify-email") ||
-                    uri.equals("/rental-offer") || uri.equals("/rental-offer/day") || uri.startsWith("/car-images")) {
+            if (uri.equals("/signup") || uri.equals("/login") || uri.equals("/verify-email") || method.equalsIgnoreCase("options")
+                    || uri.startsWith("/rental-offer") || uri.equals("/rental-offer/day") || uri.startsWith("/car-images")) {
                 return true;
             } else {
                 return false;

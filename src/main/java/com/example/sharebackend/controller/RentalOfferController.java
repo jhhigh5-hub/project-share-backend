@@ -108,7 +108,6 @@ public class RentalOfferController {
     public RentalOfferListResponse rentalOfferInfoHandle() {
         // 매물 전체 조회
         List<RentalOfferAddReviewResponse> rentalOfferAllList = rentalOfferMapper.findAllRentalOffersWithImages();
-        System.out.println("rentalOfferAllList: " + rentalOfferAllList);
 
         // 매물 idx 목록 추출
         List<Integer> ids = rentalOfferAllList.stream()
