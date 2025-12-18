@@ -132,6 +132,7 @@ public class RentalOfferController {
             RentalOfferAllImages dto =
                     RentalOfferAllImages.builder()
                             .idx(o.getIdx())
+                            .nickname(o.getNickname())
                             .rentalPrice(o.getRentalPrice())
                             .description(o.getDescription())
                             .corporation(o.getCorporation())
