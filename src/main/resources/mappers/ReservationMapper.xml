@@ -77,7 +77,7 @@
     <!-- 반납절차 확인용 예약 조회 -->
     <select id="selectReservationForReturn" parameterType="int" resultType="Reservation">
         select * from reservation
-        where reservation.idx = #{reservationIdx}
+        where idx = #{reservationIdx}
         and reservation.reservation_status = '사용 중'
     </select>
 
