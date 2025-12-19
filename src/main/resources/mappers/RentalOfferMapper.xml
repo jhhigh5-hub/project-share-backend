@@ -84,7 +84,7 @@
         select 1
         from reservation
         where reservation.rental_offer_idx = rental_offer.idx
-        and reservation.reservation_status = '사용 중'
+        and reservation.reservation_status = '예약중'
         );
     </select>
     <!-- 매물 전체 이미지 -->
@@ -136,7 +136,7 @@
         SELECT 1
         FROM reservation res
         WHERE res.rental_offer_idx = ro.idx
-        AND res.reservation_status = '사용 중'
+        AND res.reservation_status = '예약중'
         AND res.start_date &lt;= #{endDate}
         AND res.end_date &gt;= #{startDate}
         )

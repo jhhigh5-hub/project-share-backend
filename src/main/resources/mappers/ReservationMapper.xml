@@ -70,7 +70,7 @@
         select 1
         from rental_offer
         where reservation.rental_offer_idx = rental_offer.idx
-        and reservation_status in ('사용 중', '취소됨')
+        and reservation_status in ('예약중', '취소됨')
         );
     </select>
 
@@ -78,7 +78,7 @@
     <select id="selectReservationForReturn" parameterType="int" resultType="Reservation">
         select * from reservation
         where idx = #{reservationIdx}
-        and reservation.reservation_status = '사용 중'
+        and reservation.reservation_status = '예약중'
     </select>
 
     <!-- 해당 아이디 예약 총 개수 -->
@@ -91,7 +91,7 @@
         select count(*)
         from reservation
         where rental_offer_idx = #{rentalOfferIdx}
-        and reservation_status in ('예약완료' , '사용 중')
+        and reservation_status in ('예약완료' , '예약중')
         and start_date &lt; #{endDate}
         and end_date &gt; #{startDate}
     </select>
@@ -107,7 +107,7 @@
         join account on account.id = reservation.account_id
         join rental_offer on rental_offer.idx = reservation.rental_offer_idx
         set reservation_status = '사용완료'
-        where reservation_status = '사용 중'
+        where reservation_status = '예약중'
         and reservation.idx = #{reservationIdx}
         and account.id = #{accountId};
     </update>
