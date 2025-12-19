@@ -175,10 +175,16 @@ public class RentalOfferController {
         List<RentalOfferDayListResponse> dayList =
                 rentalOfferMapper.findAvailableRentalOffers(startDate, endDate);
         if(dayList.isEmpty()){
-            return RentalOfferResponse.builder().success(false).message("매물 없음").build();
+            return RentalOfferResponse.builder().success(true).message("매물 없음").build();
         }
-
-        return RentalOfferResponse.builder().success(true).message("조회성공").rentalOfferDayList(dayList).build();
+        if (startDate.isAfter(endDate)) {
+            return RentalOfferResponse.builder()
+                    .success(false)
+                    .message("시작일은 종료일보다 이후일 수 없습니다.")
+                    .build();
+        }
+        return RentalOfferResponse.builder()
+                .success(true).message("조회성공").total(dayList.size()).rentalOfferDayList(dayList).build();
     }
 
 }
