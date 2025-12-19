@@ -30,12 +30,16 @@
 
     <!-- 차트용 데이터 -->
     <select id="ChartList" resultType="CarChartResultResponse">
-        select car.idx, car.corporation, car.model_name, count(reservation.idx) as count
-        from car
-        join rental_offer on car.idx = rental_offer.car_idx
-        join reservation on rental_offer.idx = reservation.rental_offer_idx
-        where reservation_status = '사용완료'
-        group by car.idx, car.corporation, car.model_name
+        SELECT
+        MIN(car.idx) AS idx,
+        car.corporation,
+        car.model_name,
+        COUNT(reservation.idx) AS count
+        FROM car
+        JOIN rental_offer ON car.idx = rental_offer.car_idx
+        JOIN reservation ON rental_offer.idx = reservation.rental_offer_idx
+        WHERE reservation.reservation_status = '사용완료'
+        GROUP BY car.corporation, car.model_name
     </select>
 
 </mapper>
