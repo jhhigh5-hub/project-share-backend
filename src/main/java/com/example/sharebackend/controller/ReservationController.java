@@ -9,6 +9,7 @@ import com.example.sharebackend.request.ReservationStatusUpdate;
 import com.example.sharebackend.response.ReservationListResponse;
 import com.example.sharebackend.response.ReservationResponse;
 import com.example.sharebackend.response.ReservationStatusUpdateResponse;
+import com.example.sharebackend.response.ReservationWithReview;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Update;
@@ -89,16 +90,23 @@ public class ReservationController {
     }
     // 예약 기록 조회
     @GetMapping("/reservation")
-    public ReservationListResponse ReservationSelectHandle(@RequestAttribute("currentAccountId") String accountId) {
-
-        List<Reservation> list = reservationMapper.selectListAll(accountId);
+    public ReservationListResponse getReservations(@RequestAttribute("currentAccountId") String accountId) {
+        List<ReservationWithReview> list = reservationMapper.selectReservationsWithReview(accountId);
         if (!list.isEmpty()) {
-            int total = reservationMapper.selectAllCount(accountId);
-            return ReservationListResponse.builder().success(true)
-                    .message("조회성공").total(total).reservations(list).build();
+            int total = list.size();
+            return ReservationListResponse.builder()
+                    .success(true)
+                    .message("조회성공")
+                    .total(total)
+                    .reservations(list)
+                    .build();
         }
-        return ReservationListResponse.builder().success(false).message("조회실패").build();
+        return ReservationListResponse.builder()
+                .success(false)
+                .message("조회실패")
+                .build();
     }
+
 
     @DeleteMapping("/reservation/{idx}")
     public ReservationResponse deleteReservationHandle(@PathVariable int idx, @RequestAttribute("currentAccountId") String accountId) {
@@ -107,10 +115,10 @@ public class ReservationController {
 
         int update = reservationMapper.reservationDelete(idx, accountId);
         if (update > 0) {
-            return ReservationResponse.builder().success(true).message("예약이 철회 되었습니다.").build();
+            return ReservationResponse.builder().success(true).message("예약이 취소 되었습니다.").build();
         }
 
-        return ReservationResponse.builder().success(false).message("예약철회 실패").build();
+        return ReservationResponse.builder().success(false).message("예약취소 실패").build();
     }
 
     // 반납하기 (예약상태 업데이트)

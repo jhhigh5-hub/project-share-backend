@@ -1,6 +1,7 @@
 package com.example.sharebackend.mapper;
 
 import com.example.sharebackend.domain.Reservation;
+import com.example.sharebackend.response.ReservationWithReview;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,5 +33,7 @@ public interface ReservationMapper {
 
     // 예약 상태 업데이트
     int reservationStatusUpdate(int reservationIdx, String accountId);
+
+    List<ReservationWithReview> selectReservationsWithReview(@Param("accountId") String accountId);
 
 }

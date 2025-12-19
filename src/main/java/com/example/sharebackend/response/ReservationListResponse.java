@@ -15,6 +15,6 @@ public class ReservationListResponse {
     boolean success;
     String message;
     int total;
-    List<Reservation> reservations;
-
+    List<ReservationWithReview> reservations;
+    boolean hasReview;
 }
