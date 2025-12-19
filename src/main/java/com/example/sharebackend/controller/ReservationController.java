@@ -59,7 +59,7 @@ public class ReservationController {
         }
 
         rvt.setPaymentAmount(total);
-        rvt.setReservationStatus("사용 중");
+        rvt.setReservationStatus("예약중");
 
         reservationMapper.insertOne(rvt);
 
