@@ -18,7 +18,7 @@ public interface CarMapper {
     Car findCarByIdx(int idx);
 
     // query에 해당하는 모든 차와 갯수
-    List<RentalOffer> findAllCars(@Param("query") String query);
+    List<Car> findAllCars(@Param("query") String query);
     int countAllCars(@Param("query") String query);
 
     // 차트용 데이터

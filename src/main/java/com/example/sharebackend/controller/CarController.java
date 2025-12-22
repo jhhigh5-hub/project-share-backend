@@ -38,9 +38,9 @@ public class CarController {
     @GetMapping("/car")
     public CarListResponse carInfoHandle(@RequestParam(defaultValue = "") String query) {
 
-        List<RentalOffer> carList = carMapper.findAllCars(query);
+        List<Car> carList = carMapper.findAllCars(query);
         int allCars = carMapper.countAllCars(query);
-        return CarListResponse.builder().success(true).rentalOfferList(carList).total(allCars).build();
+        return CarListResponse.builder().success(true).carList(carList).total(allCars).build();
     }
 
     // 차트용 데이터
