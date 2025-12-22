@@ -12,20 +12,79 @@
         select * from car where idx = #{idx}
     </select>
 
+    <!-- 검색 조회에 사용 -->
+    <resultMap id="RentalOfferResultMap" type="RentalOffer">
+        <id property="idx" column="idx"/>
+        <result property="nickName" column="nickname"/>
+        <result property="carIdx" column="car_idx"/>
+        <result property="rentalPrice" column="rental_price"/>
+        <result property="description" column="description"/>
+        <result property="img" column="img"/>
+
+        <association property="car" javaType="Car">
+            <id property="idx" column="idx"/>
+            <result property="corporation" column="corporation"/>
+            <result property="modelName" column="model_name"/>
+            <result property="carType" column="car_type"/>
+            <result property="modelYear" column="model_year"/>
+            <result property="fewSeats" column="few_seats"/>
+            <result property="gearType" column="gear_type"/>
+        </association>
+
+
+    </resultMap>
+
     <!-- query에 검색 및 총 갯수 -->
-    <select id="findAllCars" resultType="com.example.sharebackend.domain.Car" >
-        select * from car
-        where corporation like concat('%', #{query}, '%')
-        or model_name like concat('%', #{query}, '%')
-        or car_type like concat('%', #{query}, '%')
-        or model_year like concat('%', #{query}, '%')
+    <select id="findAllCars" resultMap="RentalOfferResultMap" >
+        select
+        rental_offer.idx,
+        rental_offer.car_idx,
+        rental_offer.rental_price,
+        rental_offer.description,
+        account.nickname,
+        car.corporation,
+        car.model_name,
+        car.car_type,
+        car.model_year,
+        MIN(car_img.img) as img
+        from rental_offer
+        join car on rental_offer.car_idx = car.idx
+        join account on rental_offer.account_id = account.id
+        left join car_img on rental_offer.idx = car_img.rental_offer_idx
+        where car.corporation like concat('%', #{query}, '%')
+        or car.model_name  like concat('%', #{query}, '%')
+        or car.car_type    like concat('%', #{query}, '%')
+        or cast(car.model_year as char) like concat('%', #{query}, '%')
+        group by
+        rental_offer.idx,
+        rental_offer.car_idx,
+        rental_offer.rental_price,
+        rental_offer.description,
+        account.nickname,
+        car.corporation,
+        car.model_name,
+        car.car_type,
+        car.model_year
+
     </select>
     <select id="countAllCars" resultType="int">
-        select count(*) from car
-        where corporation like concat('%', #{query}, '%')
-        or model_name like concat('%', #{query}, '%')
-        or car_type like concat('%', #{query}, '%')
-        or model_year like concat('%', #{query}, '%')
+        select count(*)
+        from (
+        select
+        rental_offer.idx
+        from rental_offer
+        join car on rental_offer.car_idx = car.idx
+        join account on rental_offer.account_id = account.id
+        left join car_img on rental_offer.idx = car_img.rental_offer_idx
+        where (
+        car.corporation like concat('%', #{query}, '%')
+        or car.model_name  like concat('%', #{query}, '%')
+        or car.car_type    like concat('%', #{query}, '%')
+        or cast(car.model_year as char) like concat('%', #{query}, '%')
+        )
+        group by rental_offer.idx
+        ) t;
+
     </select>
 
     <!-- 차트용 데이터 -->
@@ -39,6 +98,21 @@
         JOIN rental_offer ON car.idx = rental_offer.car_idx
         JOIN reservation ON rental_offer.idx = reservation.rental_offer_idx
         WHERE reservation.reservation_status = '사용완료'
+        GROUP BY car.corporation, car.model_name
+    </select>
+
+    <!-- 차트용 월별 데이터 -->
+    <select id="ChartMonthList" resultType="CarChartResultResponse">
+        SELECT
+        MIN(car.idx) AS idx,
+        car.corporation,
+        car.model_name,
+        COUNT(reservation.idx) AS count
+        FROM car
+        JOIN rental_offer ON car.idx = rental_offer.car_idx
+        JOIN reservation ON rental_offer.idx = reservation.rental_offer_idx
+        WHERE reservation.reservation_status = '사용완료'
+        and month(reservation.start_date) = #{month}
         GROUP BY car.corporation, car.model_name
     </select>
 

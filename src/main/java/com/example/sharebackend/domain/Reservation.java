@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class Reservation {
     int idx;
     String accountId;
+    String nickname;
     int rentalOfferIdx;
     LocalDate startDate;
     LocalDate endDate;

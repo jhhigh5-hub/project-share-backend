@@ -113,6 +113,7 @@ public class ReservationController {
         return ReservationResponse.builder().success(false).message("예약철회 실패").build();
     }
 
+    // 반납하기 (예약상태 업데이트)
     @PatchMapping("/reservation/statusUpdate")
     public ReservationStatusUpdateResponse reservationStatusUpdate(@RequestBody ReservationStatusUpdate rsu,
                                                                    @RequestAttribute("currentAccountId") String accountId) {
