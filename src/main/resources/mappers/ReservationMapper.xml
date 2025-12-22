@@ -9,6 +9,7 @@
         <!-- Reservation -->
         <id property="idx" column="idx"/>
         <result property="accountId" column="account_id"/>
+        <result property="nickname" column="nickname"/>
         <result property="rentalOfferIdx" column="rental_offer_idx"/>
         <result property="startDate" column="start_date"/>
         <result property="endDate" column="end_date"/>
@@ -48,7 +49,9 @@
 
     <!-- 해당 아이디 예약 기록 조회 -->
     <select id="selectListAll" parameterType="string" resultMap="ReservationResultMap">
-        select *,(
+        select reservation.idx, account.nickname, reservation.rental_offer_idx,
+        reservation.start_date, reservation.end_date, reservation.reservation_status, reservation.payment_amount,
+        rental_offer.idx, account.nickname ,rental_offer.rental_price, rental_offer.description, car.*,(
         select img
         from car_img
         where rental_offer_idx = rental_offer.idx
@@ -56,10 +59,11 @@
         limit 1
         ) as img
         from reservation
-            join rental_offer on rental_offer.idx = reservation.rental_offer_idx
-            join car on rental_offer.car_idx = car.idx
-            where reservation.account_id = #{accountId}
-            order by reservation.idx desc
+        join rental_offer on rental_offer.idx = reservation.rental_offer_idx
+        join car on rental_offer.car_idx = car.idx
+        join account on reservation.account_id = account.id
+        where reservation.account_id = #{accountId}
+        order by reservation.idx desc
     </select>
 
     <!-- view에 사용 : 해당 아이디 예약 조회 -->
@@ -109,8 +113,9 @@
         set reservation_status = '사용완료'
         where reservation_status = '예약중'
         and reservation.idx = #{reservationIdx}
-        and account.id = #{accountId};
+        and account.id = #{accountId}
     </update>
 
 
 </mapper>
+

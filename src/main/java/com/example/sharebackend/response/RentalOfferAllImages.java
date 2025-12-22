@@ -2,6 +2,7 @@ package com.example.sharebackend.response;
 
 import lombok.*;
 
+import java.time.Year;
 import java.util.List;
 
 @Setter
@@ -17,7 +18,7 @@ public class RentalOfferAllImages {
     String corporation;
     String modelName;
     String carType;
-    int modelYear;
+    Year modelYear;
     int fewSeats;
     String gearType;
     List<String> images;

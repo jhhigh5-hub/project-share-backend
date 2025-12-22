@@ -34,7 +34,8 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
                     || method.equalsIgnoreCase("options")
                     || uri.equals("/rental-offer/day")
                     || uri.startsWith("/car-images")
-                    || uri.equals("/car/chart")) {
+                    || uri.equals("/car/chart")
+                    || uri.equals("/car/month/chart")) {
                 return true;
             }
 

@@ -138,7 +138,7 @@ public class RentalOfferController {
                             .corporation(o.getCorporation())
                             .modelName(o.getModelName())
                             .carType(o.getCarType())
-                            .modelYear(o.getModelYear().getYear())
+                            .modelYear(o.getModelYear())
                             .fewSeats(o.getFewSeats())
                             .gearType(o.getGearType())
                             .images(image)

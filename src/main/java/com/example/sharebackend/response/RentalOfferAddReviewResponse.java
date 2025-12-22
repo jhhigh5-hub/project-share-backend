@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.Year;
 
 @Setter
 @Getter
@@ -21,7 +22,7 @@ public class RentalOfferAddReviewResponse {
     String corporation;
     String modelName;
     String carType;
-    LocalDate modelYear;
+    Year modelYear;
     int fewSeats;
     String gearType;
 }

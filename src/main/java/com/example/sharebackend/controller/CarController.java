@@ -1,6 +1,7 @@
 package com.example.sharebackend.controller;
 
 import com.example.sharebackend.domain.Car;
+import com.example.sharebackend.domain.RentalOffer;
 import com.example.sharebackend.mapper.CarMapper;
 import com.example.sharebackend.request.CarAddRequest;
 import com.example.sharebackend.response.CarChartResponse;
@@ -37,23 +38,23 @@ public class CarController {
     @GetMapping("/car")
     public CarListResponse carInfoHandle(@RequestParam(defaultValue = "") String query) {
 
-        List<Car> carList = carMapper.findAllCars(query);
+        List<RentalOffer> carList = carMapper.findAllCars(query);
         int allCars = carMapper.countAllCars(query);
-        return CarListResponse.builder().success(true).carList(carList).total(allCars).build();
+        return CarListResponse.builder().success(true).rentalOfferList(carList).total(allCars).build();
     }
 
     // 차트용 데이터
     @GetMapping("/car/chart")
-    public CarChartResponse chartInfoHandle(){
+    public CarChartResponse chartInfoHandle() {
 
-        // 차트용
-        List<CarChartResultResponse> chartList = carMapper.ChartList();
-        if(chartList == null){
+        // 차트용 전체 데이터
+        List<CarChartResultResponse> ChartList = carMapper.ChartList();
+        if(ChartList == null){
             return CarChartResponse.builder().success(false).message("정보가 없습니다.").build();
         }
 
         List<Car> carList = new ArrayList<>();
-        for(CarChartResultResponse chart : chartList){
+        for(CarChartResultResponse chart : ChartList){
             Car car = carMapper.findCarByIdx(chart.getIdx());
             if(car != null) {
                 carList.add(car);
@@ -63,7 +64,31 @@ public class CarController {
                 .success(true)
                 .message("차트 데이터 조회 성공")
                 .total(carList.size())
-                .carChartResponseList(chartList)
+                .carChartResponseList(ChartList)
+                .build();
+    }
+
+    @GetMapping("/car/month/chart")
+    public CarChartResponse chartMonthInfoHandle(@RequestParam(defaultValue = "") String month) {
+
+        // 차트용 월별 데이터
+        List<CarChartResultResponse> ChartMonthList = carMapper.ChartMonthList(month);
+        if(ChartMonthList == null){
+            return CarChartResponse.builder().success(false).message("정보가 없습니다.").build();
+        }
+
+        List<Car> carList = new ArrayList<>();
+        for(CarChartResultResponse chart : ChartMonthList){
+            Car car = carMapper.findCarByIdx(chart.getIdx());
+            if(car != null) {
+                carList.add(car);
+            }
+        }
+        return CarChartResponse.builder()
+                .success(true)
+                .message("차트 월별 데이터 조회 성공")
+                .total(carList.size())
+                .carChartResponseList(ChartMonthList)
                 .build();
     }
 
