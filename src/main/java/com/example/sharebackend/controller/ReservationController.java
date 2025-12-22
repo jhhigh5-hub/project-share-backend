@@ -91,6 +91,25 @@ public class ReservationController {
     // 예약 기록 조회
     @GetMapping("/reservation")
     public ReservationListResponse getReservations(@RequestAttribute("currentAccountId") String accountId) {
+        List<Reservation> list = reservationMapper.selectListAll(accountId);
+        if (!list.isEmpty()) {
+            int total = list.size();
+            return ReservationListResponse.builder()
+                    .success(true)
+                    .message("조회성공")
+                    .total(total)
+                    .reservationsWithReviews(list)
+                    .build();
+        }
+        return ReservationListResponse.builder()
+                .success(false)
+                .message("조회실패")
+                .build();
+    }
+
+    // 리류 여부 예약 조회
+    @GetMapping("/reservation/review")
+    public ReservationListResponse getReservationsReview(@RequestAttribute("currentAccountId") String accountId) {
         List<ReservationWithReview> list = reservationMapper.selectReservationsWithReview(accountId);
         if (!list.isEmpty()) {
             int total = list.size();
@@ -106,7 +125,6 @@ public class ReservationController {
                 .message("조회실패")
                 .build();
     }
-
 
     @DeleteMapping("/reservation/{idx}")
     public ReservationResponse deleteReservationHandle(@PathVariable int idx, @RequestAttribute("currentAccountId") String accountId) {
