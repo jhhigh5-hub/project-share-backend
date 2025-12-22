@@ -100,6 +100,19 @@
         and end_date &gt; #{startDate}
     </select>
 
+    <select id="selectReservationsWithReview" resultType="ReservationWithReview">
+        SELECT r.*, ro.*, r.reservation_status,
+        CASE WHEN EXISTS (
+        SELECT 1
+        FROM review rv
+        WHERE rv.reservation_idx = r.idx
+        ) THEN TRUE ELSE FALSE END AS has_review
+        FROM reservation r
+        LEFT JOIN rental_offer ro ON r.rental_offer_idx = ro.idx
+        WHERE r.account_id = #{accountId}
+        ORDER BY r.start_date DESC
+    </select>
+
     <!-- 예약 철회 -->
     <delete id="reservationDelete" parameterType="Reservation" >
         update reservation set reservation_status='취소됨' where idx=#{idx} and account_id=#{accountId}
